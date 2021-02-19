@@ -4,9 +4,11 @@
 
 #include "gamescreen.h"
 #include "commons.h"
+#include "character.h"
 
-//Forward declaration
+//Forward declarations
 class Texture2D;
+class Character;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -21,6 +23,8 @@ private:
 	Texture2D* m_background_texture;
 
 	bool SetUpLevel();
+
+	Character* my_character;
 };
 
 #endif
