@@ -121,6 +121,12 @@ bool Update() {
 		if (e.key.keysym.sym == SDLK_q) {
 			return true;
 		}
+		if (e.key.keysym.sym == SDLK_1) {
+			game_screen_manager->ChangeScreen(SCREENS::SCREEN_MENU);
+		}
+		if (e.key.keysym.sym == SDLK_2) {
+			game_screen_manager->ChangeScreen(SCREENS::SCREEN_LEVEL1);
+		}
 		break;
 	}
 

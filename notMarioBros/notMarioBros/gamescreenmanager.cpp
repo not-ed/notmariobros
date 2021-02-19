@@ -1,6 +1,9 @@
 #include "gamescreenmanager.h"
 #include "gamescreen.h"
 #include "gamescreenlevel1.h"
+#include "gamescreentitle.h"
+
+#include <iostream>
 
 GameScreenManager::GameScreenManager(SDL_Renderer* renderer, SCREENS startScreen) {
 	m_renderer = renderer;
@@ -32,13 +35,18 @@ void GameScreenManager::ChangeScreen(SCREENS new_screen) {
 	}
 
 	// Pointers cannot be set up inside a switch statement.
+	GameScreenTitle* tempScreen_title;
 	GameScreenLevel1* tempScreen;
+	
 
 	switch (new_screen)
 	{
 	case SCREEN_INTRO:
 		break;
 	case SCREEN_MENU:
+		tempScreen_title = new GameScreenTitle(m_renderer);
+		m_current_screen = (GameScreen*)tempScreen_title;
+		tempScreen_title = nullptr;
 		break;
 	case SCREEN_LEVEL1:
 		tempScreen = new GameScreenLevel1(m_renderer);
