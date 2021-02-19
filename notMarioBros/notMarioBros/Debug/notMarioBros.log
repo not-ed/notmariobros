@@ -1,2 +1,7 @@
-﻿  main.cpp
+﻿  gamescreen.cpp
+  gamescreenlevel1.cpp
+  gamescreenmanager.cpp
+  main.cpp
+  texture2d.cpp
+  Generating Code...
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

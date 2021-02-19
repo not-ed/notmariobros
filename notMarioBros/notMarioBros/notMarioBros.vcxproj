@@ -141,6 +141,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gamescreen.cpp" />
+    <ClCompile Include="gamescreenlevel1.cpp" />
+    <ClCompile Include="gamescreenmanager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="texture2d.cpp" />
   </ItemGroup>
@@ -154,6 +157,9 @@
   <ItemGroup>
     <ClInclude Include="commons.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="gamescreen.h" />
+    <ClInclude Include="gamescreenlevel1.h" />
+    <ClInclude Include="gamescreenmanager.h" />
     <ClInclude Include="texture2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
