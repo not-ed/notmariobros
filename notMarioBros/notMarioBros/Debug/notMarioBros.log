@@ -1,6 +1,3 @@
 ﻿  character.cpp
-  gamescreenlevel1.cpp
-  gamescreenmanager.cpp
-  main.cpp
-  Generating Code...
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.cpp(114,33): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

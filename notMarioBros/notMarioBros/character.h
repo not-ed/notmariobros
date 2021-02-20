@@ -30,9 +30,13 @@ protected:
 
 	bool m_moving_left;
 	bool m_moving_right;
+	bool m_jumping;
+	float m_current_velocity;
 
 	virtual void MoveLeft(float deltaTime);
 	virtual void MoveRight(float deltaTime);
+	virtual void AddGravity(float deltaTime);
+	virtual void Jump(float deltaTime);
 };
 
 #endif
