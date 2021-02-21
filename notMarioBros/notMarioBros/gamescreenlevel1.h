@@ -5,6 +5,8 @@
 #include "gamescreen.h"
 #include "commons.h"
 #include "character.h"
+#include "charactermario.h"
+#include "characterluigi.h"
 
 //Forward declarations
 class Texture2D;
@@ -24,7 +26,8 @@ private:
 
 	bool SetUpLevel();
 
-	Character* my_character;
+	CharacterMario* mario_character;
+	CharacterLuigi* luigi_character;
 };
 
 #endif

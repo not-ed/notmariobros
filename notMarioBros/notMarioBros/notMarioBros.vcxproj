@@ -142,6 +142,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="characterluigi.cpp" />
+    <ClCompile Include="charactermario.cpp" />
+    <ClCompile Include="collisions.cpp" />
     <ClCompile Include="gamescreen.cpp" />
     <ClCompile Include="gamescreenlevel1.cpp" />
     <ClCompile Include="gamescreenmanager.cpp" />
@@ -158,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="character.h" />
+    <ClInclude Include="characterluigi.h" />
+    <ClInclude Include="charactermario.h" />
+    <ClInclude Include="collisions.h" />
     <ClInclude Include="commons.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="gamescreen.h" />

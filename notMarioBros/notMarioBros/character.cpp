@@ -1,5 +1,4 @@
 #include "character.h"
-#include "texture2d.h"
 
 Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_position)
 {
@@ -16,6 +15,8 @@ Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_po
 	m_moving_right = false;
 	m_jumping = false;
 	m_current_velocity = 0.0f;
+
+	m_collision_radius = 15.0f;
 }
 
 Character::~Character()
@@ -40,8 +41,6 @@ void Character::Render() {
 void Character::Update(float deltaTime, SDL_Event e) {
 	AddGravity(deltaTime);
 
-	
-
 	if (m_moving_left)
 	{
 		MoveLeft(deltaTime);
@@ -50,38 +49,9 @@ void Character::Update(float deltaTime, SDL_Event e) {
 	{
 		MoveRight(deltaTime);
 	}
-	
+
 	if (m_jumping) {
 		Jump(deltaTime);
-	}
-
-
-	switch (e.type)
-	{
-	case SDL_KEYDOWN:
-		if (e.key.keysym.sym == SDLK_LEFT) {
-			m_moving_left = true;
-		}
-		if (e.key.keysym.sym == SDLK_RIGHT) {
-			m_moving_right = true;
-		}
-		if (e.key.keysym.sym == SDLK_UP) {
-			m_jumping = true;
-		}
-		break;
-	case SDL_KEYUP:
-		if (e.key.keysym.sym == SDLK_LEFT) {
-			m_moving_left = false;
-		}
-		if (e.key.keysym.sym == SDLK_RIGHT) {
-			m_moving_right = false;
-		}
-		if (e.key.keysym.sym == SDLK_UP) {
-			m_jumping = false;
-		}
-		break;
-	default:
-		break;
 	}
 }
 
@@ -125,4 +95,8 @@ void Character::Jump(float deltaTime) {
 		// Additonal negative velocity is add if the jump key is continued to be held down when jumping, allowing the player to control jump height to be higher if they hold the key down.
 		m_current_velocity -= (JUMP_FORCE * .75f)* deltaTime;
 	}
+}
+
+float Character::GetCollisionRadius() {
+	return m_collision_radius;
 }
