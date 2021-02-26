@@ -4,6 +4,8 @@
 #include "collisions.h"
 // The required parameters also need to be passed through the GameScreens constructor.
 GameScreenLevel1::GameScreenLevel1(SDL_Renderer* renderer) : GameScreen(renderer) {
+	m_level_map = nullptr;
+
 	SetUpLevel();
 }
 
@@ -45,14 +47,47 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {
 bool GameScreenLevel1::SetUpLevel() {
 	// Load background texture
 	m_background_texture = new Texture2D(m_renderer);
-	if (!m_background_texture->LoadFromFile("Images/test.bmp"))
+	if (!m_background_texture->LoadFromFile("Images/lvl1background.png"))
 	{
 		std::cerr << "[!] Failed to load background texture." << std::endl;
 		return false;
 	}
 
+	SetLevelMap();
+
 	// Setting up player character
-	mario_character = new CharacterMario(m_renderer, "Images/Mario.png", Vector2D(64, 330));
-	luigi_character = new CharacterLuigi(m_renderer, "Images/Luigi.png", Vector2D(432, 330));
+	mario_character = new CharacterMario(m_renderer, "Images/Mario.png", Vector2D(64, 330),m_level_map);
+	luigi_character = new CharacterLuigi(m_renderer, "Images/Luigi.png", Vector2D(432, 330),m_level_map);
+
+	//TODO: Temporary POW-block removal test, take this out later.
+	//m_level_map->ChangeTileAt(8, 7, 0);
+	//m_level_map->ChangeTileAt(8, 8, 0);
+
 	return true;
+}
+
+void GameScreenLevel1::SetLevelMap() {
+	int map[MAP_HEIGHT][MAP_WIDTH] = {
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+		{1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	};
+
+	//Clear any old maps
+	if (m_level_map != nullptr) {
+		delete m_level_map;
+	}
+
+	//Set new map
+	m_level_map = new LevelMap(map);
 }

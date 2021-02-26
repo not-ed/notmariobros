@@ -1,6 +1,6 @@
 #include "characterluigi.h"
 
-CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, string imagePath, Vector2D start_position) : Character(renderer, imagePath, start_position) {
+CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map) : Character(renderer, imagePath, start_position, map) {
 	
 }
 
@@ -16,7 +16,7 @@ void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
 			m_moving_right = true;
 		}
 		if (e.key.keysym.sym == SDLK_w) {
-			m_jumping = true;
+			if (m_can_jump) { Jump(); }
 		}
 		break;
 	case SDL_KEYUP:
@@ -25,9 +25,6 @@ void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
 		}
 		if (e.key.keysym.sym == SDLK_d) {
 			m_moving_right = false;
-		}
-		if (e.key.keysym.sym == SDLK_w) {
-			m_jumping = false;
 		}
 		break;
 	default:

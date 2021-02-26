@@ -1,4 +1,4 @@
 ﻿  gamescreenlevel1.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(26,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(26,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

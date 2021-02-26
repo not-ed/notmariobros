@@ -1,6 +1,6 @@
 #include "character.h"
 
-Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_position)
+Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map)
 {
 	m_renderer = renderer;
 	m_position = start_position;
@@ -13,10 +13,10 @@ Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_po
 
 	m_moving_left = false;
 	m_moving_right = false;
-	m_jumping = false;
-	m_current_velocity = 0.0f;
 
 	m_collision_radius = 15.0f;
+
+	m_current_level_map = map;
 }
 
 Character::~Character()
@@ -39,7 +39,28 @@ void Character::Render() {
 }
 
 void Character::Update(float deltaTime, SDL_Event e) {
-	AddGravity(deltaTime);
+	//Collision position
+	int centralX_position = (int)(m_position.x + (m_texture->GetWidth() * 0.5)) / TILE_WIDTH;
+	int foot_position = (int)(m_position.y + m_texture->GetHeight()) / TILE_HEIGHT;
+
+	if (m_jumping) {
+		m_position.y -= m_jump_force * deltaTime;
+		m_jump_force -= JUMP_FORCE_DECREMENT * deltaTime;
+
+		if (m_jump_force <= 0.0f) {
+			m_jumping = false;
+		}
+	}
+
+	if(m_current_level_map->GetTileAt(foot_position,centralX_position) == 0){
+		AddGravity(deltaTime);
+
+		// This is a bit hacky, if this starts causing problems then a different approach to jumping will need to be considered later on.
+		m_can_jump = false;
+	}
+	else {
+		m_can_jump = true;
+	}
 
 	if (m_moving_left)
 	{
@@ -50,9 +71,6 @@ void Character::Update(float deltaTime, SDL_Event e) {
 		MoveRight(deltaTime);
 	}
 
-	if (m_jumping) {
-		Jump(deltaTime);
-	}
 }
 
 void Character::SetPosition(Vector2D new_position) {
@@ -74,26 +92,19 @@ void Character::MoveRight(float deltaTime) {
 }
 
 void Character::AddGravity(float deltaTime) {
-	if (m_position.y + m_texture->GetHeight() < SCREEN_HEIGHT) { // On "Ground"
-		m_current_velocity += GRAVITY_FORCE * deltaTime;
+	if (m_position.y + 64 < SCREEN_HEIGHT) {
+		m_position.y += GRAVITY * deltaTime;
 	}
 	else {
-		if (m_position.y + m_texture->GetHeight() > SCREEN_HEIGHT) {
-			m_position.y = SCREEN_HEIGHT - m_texture->GetHeight();
-			m_current_velocity = 0;
-		}
+		m_can_jump = true;
 	}
-	m_position.y += m_current_velocity * deltaTime;
-	cout << m_current_velocity << endl;
 }
 
-void Character::Jump(float deltaTime) {
-	if (m_current_velocity == 0) {
-		m_current_velocity = -JUMP_FORCE;
-	}
-	else {
-		// Additonal negative velocity is add if the jump key is continued to be held down when jumping, allowing the player to control jump height to be higher if they hold the key down.
-		m_current_velocity -= (JUMP_FORCE * .75f)* deltaTime;
+void Character::Jump() {
+	if (!m_jumping) {
+		m_jump_force = INITIAL_JUMP_FORCE;
+		m_jumping = true;
+		m_can_jump = false;
 	}
 }
 

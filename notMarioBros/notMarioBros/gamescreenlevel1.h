@@ -7,6 +7,7 @@
 #include "character.h"
 #include "charactermario.h"
 #include "characterluigi.h"
+#include "levelmap.h"
 
 //Forward declarations
 class Texture2D;
@@ -25,6 +26,9 @@ private:
 	Texture2D* m_background_texture;
 
 	bool SetUpLevel();
+
+	LevelMap* m_level_map;
+	void SetLevelMap();
 
 	CharacterMario* mario_character;
 	CharacterLuigi* luigi_character;
