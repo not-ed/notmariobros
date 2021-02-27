@@ -12,6 +12,7 @@
 //Forward declarations
 class Texture2D;
 class Character;
+class PowBlock;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -21,6 +22,8 @@ public:
 
 	void Render() override;
 	void Update(float deltaTime, SDL_Event e) override;
+
+	void UpdatePOWBlock();
 
 private:
 	Texture2D* m_background_texture;
@@ -32,6 +35,17 @@ private:
 
 	CharacterMario* mario_character;
 	CharacterLuigi* luigi_character;
+
+	PowBlock* m_pow_block;
+
+
+	// Screen Shake
+	bool m_screenshake;
+	float m_shake_time;
+	float m_wobble;
+	float m_background_yPos;
+
+	void DoScreenShake();
 };
 
 #endif

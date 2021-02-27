@@ -48,6 +48,9 @@
     <ClCompile Include="levelmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="powblock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="SDL2\SDL\SDL2.lib" />
@@ -91,6 +94,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="levelmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="powblock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -111,3 +111,8 @@ void Character::Jump() {
 float Character::GetCollisionRadius() {
 	return m_collision_radius;
 }
+
+void Character::CancelJump() {
+	m_jumping = false;
+	m_jump_force = 0;
+}
