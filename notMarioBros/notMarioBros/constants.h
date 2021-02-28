@@ -21,4 +21,9 @@
 
 #define SHAKE_DURATION .25f
 
+#define INJURED_TIME 2.5f
+#define INJURY_JUMP_FORCE 300.0f
+
+#define KOOPA_SPEED 64.0f
+
 #endif

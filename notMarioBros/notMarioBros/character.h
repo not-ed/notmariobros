@@ -29,10 +29,15 @@ public:
 	bool IsJumping() { return m_jumping; }
 	void CancelJump();
 
+	void SetAlive(bool isAlive) { m_alive = isAlive; }
+	bool GetAlive() { return m_alive; }
+
 private:
-	FACING m_facing_direction;
+	bool m_alive;
 	LevelMap* m_current_level_map;
 protected:
+	FACING m_facing_direction;
+
 	SDL_Renderer* m_renderer;
 	Vector2D m_position;
 	Texture2D* m_texture;
@@ -45,6 +50,8 @@ protected:
 	bool m_jumping;
 	bool m_can_jump;
 	float m_jump_force;
+
+	float m_movement_speed;
 
 	virtual void MoveLeft(float deltaTime);
 	virtual void MoveRight(float deltaTime);

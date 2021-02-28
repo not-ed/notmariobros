@@ -17,6 +17,8 @@ Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_po
 	m_collision_radius = 15.0f;
 
 	m_current_level_map = map;
+
+	m_alive = true;
 }
 
 Character::~Character()
@@ -83,12 +85,12 @@ Vector2D Character::GetPosition() {
 
 void Character::MoveLeft(float deltaTime) {
 	m_facing_direction = FACING::FACING_LEFT;
-	m_position.x -= deltaTime * MOVEMENTSPEED;
+	m_position.x -= deltaTime * m_movement_speed;
 }
 
 void Character::MoveRight(float deltaTime) {
 	m_facing_direction = FACING::FACING_RIGHT;
-	m_position.x += deltaTime * MOVEMENTSPEED;
+	m_position.x += deltaTime * m_movement_speed;
 }
 
 void Character::AddGravity(float deltaTime) {

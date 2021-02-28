@@ -7,7 +7,9 @@
 #include "character.h"
 #include "charactermario.h"
 #include "characterluigi.h"
+#include "koopa.h"
 #include "levelmap.h"
+#include <vector>
 
 //Forward declarations
 class Texture2D;
@@ -46,6 +48,15 @@ private:
 	float m_background_yPos;
 
 	void DoScreenShake();
+
+	void UpdateEnemies(float deltaTime, SDL_Event e);
+	void CreateKoopa(Vector2D position, FACING direction, float speed);
+
+	vector<CharacterKoopa*> m_enemies;
+
+	float koopa_spawn_frequency = 9.0f;
+	float last_koopa_spawn;
+	FACING koopa_starting_direction;
 };
 
 #endif

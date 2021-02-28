@@ -149,6 +149,7 @@
     <ClCompile Include="gamescreenlevel1.cpp" />
     <ClCompile Include="gamescreenmanager.cpp" />
     <ClCompile Include="gamescreentitle.cpp" />
+    <ClCompile Include="koopa.cpp" />
     <ClCompile Include="levelmap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="powblock.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="gamescreenlevel1.h" />
     <ClInclude Include="gamescreenmanager.h" />
     <ClInclude Include="gamescreentitle.h" />
+    <ClInclude Include="koopa.h" />
     <ClInclude Include="levelmap.h" />
     <ClInclude Include="powblock.h" />
     <ClInclude Include="texture2d.h" />
