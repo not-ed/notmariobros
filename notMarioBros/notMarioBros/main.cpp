@@ -5,6 +5,7 @@
 #include "texture2d.h"
 #include "commons.h"
 #include "gamescreenmanager.h"
+#include <SDL_mixer.h>
 
 #include <iostream>
 using namespace std;
@@ -21,11 +22,19 @@ void Render();
 bool InitSDL();
 void CloseSDL();
 bool Update();
+void LoadMusic(string path);
+
+Mix_Music* g_music = nullptr;
 
 int main(int argc, char* args[]) {
 
 	if (InitSDL())
 	{
+		LoadMusic("Music/Mario.mp3");
+		if (Mix_PlayingMusic() == 0) {
+			Mix_PlayMusic(g_music, -1);
+		}
+
 		game_screen_manager = new GameScreenManager(g_renderer, SCREEN_LEVEL1);
 
 		g_old_time = SDL_GetTicks();
@@ -80,6 +89,12 @@ bool InitSDL() {
 			return false;
 		}
 
+		// Initialise sound
+		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+			cerr << "[!] Mixer could not be initialized. Error: " << Mix_GetError() << endl;
+			return false;
+		}
+
 	}
 	
 	return true;
@@ -98,9 +113,14 @@ void CloseSDL() {
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 
+	// Release Music
+	Mix_FreeMusic(g_music);
+	g_music = nullptr;
+
 	// Quit additional SDL systems
 	IMG_Quit();
 	SDL_Quit();
+	Mix_Quit();
 }
 
 bool Update() {
@@ -145,4 +165,11 @@ void Render() {
 
 	// Update Screen
 	SDL_RenderPresent(g_renderer);
+}
+
+void LoadMusic(string path) {
+	g_music = Mix_LoadMUS(path.c_str());
+	if (g_music == nullptr) {
+		cerr << "[!] Failed to load music from '" << path << "'. Error: " << Mix_GetError() << endl;
+	}
 }
