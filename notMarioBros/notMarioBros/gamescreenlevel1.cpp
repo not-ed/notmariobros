@@ -85,14 +85,6 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {
 	mario_character->Update(deltaTime, e);
 	luigi_character->Update(deltaTime, e);
 
-	// TODO: Temporary Collision Tests, remove this later
-	if (Collisions::Instance()->Circle(mario_character,luigi_character)) {
-		cout << "Circle collision made!" << endl;
-	}
-	if (Collisions::Instance()->Box(mario_character->GetCollisionBox(),luigi_character->GetCollisionBox())) {
-		cout << "Box collision made!" << endl;
-	}
-
 	UpdatePOWBlock();
 
 	UpdateEnemies(deltaTime, e);

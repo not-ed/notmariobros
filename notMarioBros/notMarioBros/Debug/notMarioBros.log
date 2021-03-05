@@ -1,18 +1,7 @@
-﻿  koopa.cpp
+﻿  gamescreenlevel1.cpp
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(10,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(11,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,32): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,32): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,39): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,39): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,57): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(52,57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(55,64): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(55,64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(55,82): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\koopa.cpp(55,82): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  main.cpp
-  Generating Code...
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(30,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(39,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(162,20): warning C4018: '<': signed/unsigned mismatch
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

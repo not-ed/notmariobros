@@ -32,6 +32,18 @@ bool Collisions::Circle(Character* character1, Character* character2) {
 	return distance < combined_distance;
 }
 
+bool Collisions::Circle(Vector2D point1, float radius1, Vector2D point2, float radius2) {
+	//Calculate distance between the 2 points.
+	Vector2D vec = Vector2D(point1.x - point2.x, point1.y - point2.y);
+
+	// Length of the vector
+	double distance = sqrt((vec.x * vec.x) + (vec.y * vec.y));
+
+	double combined_distance = radius1 + radius2;
+
+	return distance < combined_distance;
+}
+
 bool Collisions::Box(Rect2D rect1, Rect2D rect2) {
 	if (rect1.x + (rect1.width/2) > rect2.x && rect1.x + (rect1.width/2)<rect2.x + rect2.width && rect1.y + (rect1.height/2)>rect2.y && rect1.y + (rect1.height/2) < rect2.y + rect2.height) {
 		return true;
