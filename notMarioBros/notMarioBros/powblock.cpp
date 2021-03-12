@@ -1,6 +1,7 @@
 #include "powblock.h"
 #include <iostream>
 #include <string>
+#include "soundmanager.h"
 
 PowBlock::PowBlock(SDL_Renderer* renderer, LevelMap* level)
 {
@@ -43,6 +44,8 @@ void PowBlock::Render() {
 
 void PowBlock::TakeHit() {
 	m_num_hits_left--;
+
+	SoundManager::Instance()->PlaySound(SOUND::ID::POW_BLOCK);
 
 	if (m_num_hits_left <= 0) {
 		m_num_hits_left = 0;

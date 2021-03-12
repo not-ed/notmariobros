@@ -1,7 +1,2 @@
-﻿  gamescreenlevel1.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(27,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(30,20): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(39,20): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(162,20): warning C4018: '<': signed/unsigned mismatch
+﻿  soundmanager.cpp
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

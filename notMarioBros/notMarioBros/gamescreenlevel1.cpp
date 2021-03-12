@@ -3,6 +3,7 @@
 #include "texture2d.h"
 #include "collisions.h"
 #include "powblock.h"
+#include "soundmanager.h"
 
 // The required parameters also need to be passed through the GameScreens constructor.
 GameScreenLevel1::GameScreenLevel1(SDL_Renderer* renderer) : GameScreen(renderer) {
@@ -113,6 +114,8 @@ bool GameScreenLevel1::SetUpLevel() {
 	// Create Koopas
 	CreateKoopa(Vector2D(150,32),FACING_RIGHT,KOOPA_SPEED);
 	CreateKoopa(Vector2D(325, 32), FACING_LEFT, KOOPA_SPEED);
+
+	SoundManager::Instance()->PlayMusic(MUSIC::ID::MARIO);
 
 	return true;
 }

@@ -153,6 +153,7 @@
     <ClCompile Include="levelmap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="powblock.cpp" />
+    <ClCompile Include="soundmanager.cpp" />
     <ClCompile Include="texture2d.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="koopa.h" />
     <ClInclude Include="levelmap.h" />
     <ClInclude Include="powblock.h" />
+    <ClInclude Include="soundmanager.h" />
     <ClInclude Include="texture2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

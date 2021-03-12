@@ -1,4 +1,5 @@
 #include "character.h"
+#include "soundmanager.h"
 
 Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map)
 {
@@ -107,6 +108,7 @@ void Character::Jump() {
 		m_jump_force = INITIAL_JUMP_FORCE;
 		m_jumping = true;
 		m_can_jump = false;
+		SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);
 	}
 }
 
