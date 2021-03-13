@@ -37,12 +37,14 @@ GameScreenLevel1::~GameScreenLevel1()
 
 void GameScreenLevel1::Render() {
 
+	m_background_texture->Render(Vector2D(0, m_background_yPos), SDL_FLIP_NONE);
+
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
 		m_enemies[i]->Render();
 	}
 
-	m_background_texture->Render(Vector2D(0,m_background_yPos), SDL_FLIP_NONE);
+	//m_background_texture->Render(Vector2D(0,m_background_yPos), SDL_FLIP_NONE);
 
 	//Render characters
 	mario_character->Render();
@@ -193,7 +195,7 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 			}
 			else {
 				if (Collisions::Instance()->Circle(m_enemies[i],mario_character)) {
-					if (m_enemies[i]->GetInjured()) {
+					if (m_enemies[i]->GetInjured() && m_enemies[i]->GetAlive()) {
 						m_enemies[i]->SetAlive(false);
 					}
 					else {
@@ -202,8 +204,8 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 				}
 			}
 
-			// Flag/Schedule for deletion if no longer alive
-			if (!m_enemies[i]->GetAlive()) {
+			// Flag/Schedule for deletion if no longer alive and off screen
+			if (!m_enemies[i]->GetAlive() && m_enemies[i]->GetPosition().y > SCREEN_HEIGHT) {
 				enemyIndexToDelete = i;
 			}
 

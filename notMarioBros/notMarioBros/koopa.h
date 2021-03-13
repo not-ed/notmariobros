@@ -5,6 +5,7 @@
 #include "character.h"
 #include "constants.h"
 #include "commons.h"
+#include "soundmanager.h"
 
 class CharacterKoopa : public Character
 {
@@ -16,7 +17,7 @@ public:
 	void Update(float deltaTime, SDL_Event e);
 
 	void TakeDamage();
-	void Jump();
+	void Jump(float force);
 
 	bool GetInjured() { return m_injured; }
 
@@ -28,6 +29,9 @@ private:
 	bool m_injured;
 	float m_injured_time;
 	void FlipRightWayUp();
+
+	void OnKill();
+	void FlipDirection();
 };
 
 

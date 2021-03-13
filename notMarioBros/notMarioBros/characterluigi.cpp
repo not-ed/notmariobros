@@ -16,7 +16,7 @@ void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
 			m_moving_right = true;
 		}
 		if (e.key.keysym.sym == SDLK_w) {
-			if (m_can_jump) { Jump(); }
+			if (m_can_jump) { Jump(INITIAL_JUMP_FORCE); }
 		}
 		break;
 	case SDL_KEYUP:

@@ -29,7 +29,7 @@ public:
 	bool IsJumping() { return m_jumping; }
 	void CancelJump();
 
-	void SetAlive(bool isAlive) { m_alive = isAlive; }
+	void SetAlive(bool isAlive);
 	bool GetAlive() { return m_alive; }
 
 private:
@@ -56,7 +56,8 @@ protected:
 	virtual void MoveLeft(float deltaTime);
 	virtual void MoveRight(float deltaTime);
 	virtual void AddGravity(float deltaTime);
-	virtual void Jump();
+	virtual void Jump(float force);
+	virtual void OnKill();
 };
 
 #endif

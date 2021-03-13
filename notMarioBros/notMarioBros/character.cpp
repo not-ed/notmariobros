@@ -55,7 +55,7 @@ void Character::Update(float deltaTime, SDL_Event e) {
 		}
 	}
 
-	if(m_current_level_map->GetTileAt(foot_position,centralX_position) == 0){
+	if(m_current_level_map->GetTileAt(foot_position,centralX_position) == 0 || !m_alive){
 		AddGravity(deltaTime);
 
 		// This is a bit hacky, if this starts causing problems then a different approach to jumping will need to be considered later on.
@@ -95,7 +95,7 @@ void Character::MoveRight(float deltaTime) {
 }
 
 void Character::AddGravity(float deltaTime) {
-	if (m_position.y + 64 < SCREEN_HEIGHT) {
+	if (m_position.y + 64 < SCREEN_HEIGHT || !m_alive) {
 		m_position.y += GRAVITY * deltaTime;
 	}
 	else {
@@ -103,9 +103,9 @@ void Character::AddGravity(float deltaTime) {
 	}
 }
 
-void Character::Jump() {
+void Character::Jump(float force) {
 	if (!m_jumping) {
-		m_jump_force = INITIAL_JUMP_FORCE;
+		m_jump_force = force;
 		m_jumping = true;
 		m_can_jump = false;
 		SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);
@@ -119,4 +119,15 @@ float Character::GetCollisionRadius() {
 void Character::CancelJump() {
 	m_jumping = false;
 	m_jump_force = 0;
+}
+
+void Character::SetAlive(bool isAlive) {
+	m_alive = isAlive;
+	if (!m_alive) {
+		OnKill();
+	}
+}
+
+void Character::OnKill() {
+	Jump(KILL_JUMP_FORCE);
 }

@@ -23,6 +23,7 @@
 
 #define INJURED_TIME 2.5f
 #define INJURY_JUMP_FORCE 300.0f
+#define KILL_JUMP_FORCE 400.0f
 
 #define KOOPA_SPEED 64.0f
 

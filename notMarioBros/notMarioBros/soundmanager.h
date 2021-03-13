@@ -9,6 +9,7 @@ namespace SOUND {
 		PLAYER_JUMP,
 		PLAYER_DIE,
 		POW_BLOCK,
+		ENEMY_DIE,
 		count
 	};
 }

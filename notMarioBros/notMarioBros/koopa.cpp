@@ -36,7 +36,7 @@ void CharacterKoopa::Update(float deltaTime, SDL_Event e) {
 
 		m_injured_time -= deltaTime;
 
-		if (m_injured_time <= 0.0) { 
+		if (m_injured_time <= 0.0 && GetAlive()) { 
 			FlipRightWayUp(); }
 	}
 }
@@ -62,20 +62,34 @@ void CharacterKoopa::Render() {
 void CharacterKoopa::TakeDamage() {
 	m_injured = true;
 	m_injured_time = INJURED_TIME;
-	Jump();
+	Jump(INJURY_JUMP_FORCE);
 }
 
-void CharacterKoopa::Jump() {
+void CharacterKoopa::Jump(float force) {
 	if (!m_jumping) {
-		m_jump_force = INJURY_JUMP_FORCE;
+		m_jump_force = force;
 		m_jumping = true;
 		m_can_jump = false;
 	}
 }
 
 void CharacterKoopa::FlipRightWayUp() {
-	if (m_facing_direction == FACING::FACING_LEFT) { m_facing_direction = FACING::FACING_RIGHT; }
-	else { m_facing_direction = FACING::FACING_LEFT; }
+	FlipDirection();
 	m_injured = false;
-	Jump();
+	Jump(INJURY_JUMP_FORCE);
+}
+
+void CharacterKoopa::FlipDirection() {
+	if (m_facing_direction == FACING::FACING_LEFT) { 
+		m_facing_direction = FACING::FACING_RIGHT; 
+	}
+	else { 
+		m_facing_direction = FACING::FACING_LEFT;
+	}
+}
+
+void CharacterKoopa::OnKill() {
+	Character::OnKill();
+
+	SoundManager::Instance()->PlaySound(SOUND::ID::ENEMY_DIE);
 }
