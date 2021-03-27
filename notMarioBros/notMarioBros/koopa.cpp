@@ -7,8 +7,11 @@ CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, string imagePath, Vector2
 	m_position = start_position;
 	m_injured = false;
 
-	m_single_sprite_w = m_texture->GetWidth() / 2;
+	m_single_sprite_w = m_texture->GetWidth() / 3;
 	m_single_sprite_h = m_texture->GetHeight();
+
+	anim.SwitchTexture(TEXTURE::ID::KOOPA);
+	anim.SetAnimationSpeed(0.1f);
 }
 
 CharacterKoopa::~CharacterKoopa() {
@@ -39,14 +42,25 @@ void CharacterKoopa::Update(float deltaTime, SDL_Event e) {
 		if (m_injured_time <= 0.0 && GetAlive()) { 
 			FlipRightWayUp(); }
 	}
+
+	animTime += deltaTime;
+	if (animTime > (animSpeed))
+	{
+		currentAnimFrame++;
+		animTime = 0.0f;
+	}
+
+	anim.Update(deltaTime);
+
 }
 
 void CharacterKoopa::Render() {
 	// The leftmost position of the sprite we want to draw
-	float left = 0.0f;
+	float left = m_single_sprite_w * (currentAnimFrame % 3);
+	
 
 	// If injured, then use the second frame on the koopa sprite sheet (injured)
-	if (m_injured) { left = m_single_sprite_w; }
+	if (m_injured) { anim.SwitchTexture(TEXTURE::ID::KOOPA_STUN); }
 
 	// Establish portion of koopa sprite sheet to be drawn
 	SDL_Rect portion_of_sprite = {left,0,m_single_sprite_w,m_single_sprite_h};
@@ -55,8 +69,10 @@ void CharacterKoopa::Render() {
 	SDL_Rect destRect = { (int)(m_position.x),(int)(m_position.y),m_single_sprite_w,m_single_sprite_h };
 
 	//Draw sprite in the corresponding facing direction
-	if (m_facing_direction == FACING_RIGHT) { m_texture->Render(portion_of_sprite, destRect, SDL_FLIP_NONE); }
-	else { m_texture->Render(portion_of_sprite, destRect, SDL_FLIP_HORIZONTAL); }
+	if (m_facing_direction == FACING_RIGHT) { anim.SetFlip(SDL_FLIP_NONE); }
+	else { anim.SetFlip(SDL_FLIP_HORIZONTAL); }
+
+	anim.Render(m_position,0.0);
 }
 
 void CharacterKoopa::TakeDamage() {
@@ -76,6 +92,7 @@ void CharacterKoopa::Jump(float force) {
 void CharacterKoopa::FlipRightWayUp() {
 	FlipDirection();
 	m_injured = false;
+	anim.SwitchTexture(TEXTURE::ID::KOOPA);
 	Jump(INJURY_JUMP_FORCE);
 }
 

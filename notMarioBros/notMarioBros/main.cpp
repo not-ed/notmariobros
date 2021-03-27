@@ -2,11 +2,12 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "constants.h"
-#include "texture2d.h"
+
 #include "commons.h"
 #include "gamescreenmanager.h"
 #include <SDL_mixer.h>
 #include "soundmanager.h"
+#include "texturemanager.h"
 
 #include <iostream>
 using namespace std;
@@ -89,6 +90,8 @@ bool InitSDL() {
 			return false;
 		}
 	}
+	TextureManager::Instance()->LoadAssets(g_renderer);
+	SoundManager::Instance()->LoadAssets();
 	
 	return true;
 }
@@ -105,6 +108,12 @@ void CloseSDL() {
 	// Release window and free memory
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
+
+	// Shutdown sound manager
+	SoundManager::Instance()->Shutdown();
+
+	// Shutdown texture manager
+	TextureManager::Instance()->Shutdown();
 
 	// Quit additional SDL systems
 	IMG_Quit();

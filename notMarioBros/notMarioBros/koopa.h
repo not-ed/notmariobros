@@ -32,6 +32,11 @@ private:
 
 	void OnKill();
 	void FlipDirection();
+
+	int currentAnimFrame = 0;
+	float animSpeed = 0.1f;
+	float animTime = 0.0f;
+
 };
 
 

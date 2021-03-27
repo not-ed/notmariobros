@@ -5,7 +5,23 @@ SoundManager* SoundManager::m_instance = nullptr;
 
 SoundManager::SoundManager()
 {
-	LoadAssets();
+
+}
+
+void SoundManager::LoadAssets() {
+	if (!initialized) {
+		//Sounds
+		sounds[SOUND::ID::PLAYER_JUMP] = Mix_LoadWAV("Music/jump.wav");
+		sounds[SOUND::ID::PLAYER_DIE] = Mix_LoadWAV("Music/die.wav");
+		sounds[SOUND::ID::POW_BLOCK] = Mix_LoadWAV("Music/pow.wav");
+		sounds[SOUND::ID::ENEMY_DIE] = Mix_LoadWAV("Music/enemy_die.wav");
+
+		//Music
+		music[MUSIC::ID::MARIO] = Mix_LoadMUS("Music/Mario.mp3");
+		music[MUSIC::ID::UNDERWORLD] = Mix_LoadMUS("Music/MarioUnderworld.mp3");
+		
+		initialized = true;
+	}
 }
 
 SoundManager::~SoundManager()
@@ -27,18 +43,6 @@ SoundManager::~SoundManager()
 	music[MUSIC::ID::UNDERWORLD] = nullptr;
 
 	m_instance = nullptr;
-}
-
-void SoundManager::LoadAssets() {
-	//Sounds
-	sounds[SOUND::ID::PLAYER_JUMP] = Mix_LoadWAV("Music/jump.wav");
-	sounds[SOUND::ID::PLAYER_DIE] = Mix_LoadWAV("Music/die.wav");
-	sounds[SOUND::ID::POW_BLOCK] = Mix_LoadWAV("Music/pow.wav");
-	sounds[SOUND::ID::ENEMY_DIE] = Mix_LoadWAV("Music/enemy_die.wav");
-
-	//Music
-	music[MUSIC::ID::MARIO] = Mix_LoadMUS("Music/Mario.mp3");
-	music[MUSIC::ID::UNDERWORLD] = Mix_LoadMUS("Music/MarioUnderworld.mp3");
 }
 
 SoundManager* SoundManager::Instance() {
@@ -63,4 +67,12 @@ void SoundManager::PlayMusic(MUSIC::ID id) {
 
 void SoundManager::StopMusic() {
 	Mix_HaltMusic();
+}
+
+void SoundManager::Shutdown() {
+	if (m_instance)
+	{
+		delete m_instance;
+		m_instance = nullptr;
+	}
 }

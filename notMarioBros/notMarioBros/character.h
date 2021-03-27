@@ -8,6 +8,7 @@
 #include "constants.h"
 #include "texture2d.h"
 #include "levelmap.h"
+#include "animator.h"
 
 using namespace std;
 
@@ -58,6 +59,9 @@ protected:
 	virtual void AddGravity(float deltaTime);
 	virtual void Jump(float force);
 	virtual void OnKill();
+
+	Animator anim = Animator(TEXTURE::ID::NONE,0.0f);
+
 };
 
 #endif

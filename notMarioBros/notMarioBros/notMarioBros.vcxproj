@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="animator.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="characterluigi.cpp" />
     <ClCompile Include="charactermario.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="powblock.cpp" />
     <ClCompile Include="soundmanager.cpp" />
     <ClCompile Include="texture2d.cpp" />
+    <ClCompile Include="texturemanager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="SDL2\SDL\SDL2.lib" />
@@ -164,6 +166,7 @@
     <Library Include="SDL2\SDL\SDL2_mixer.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="animator.h" />
     <ClInclude Include="character.h" />
     <ClInclude Include="characterluigi.h" />
     <ClInclude Include="charactermario.h" />
@@ -179,6 +182,7 @@
     <ClInclude Include="powblock.h" />
     <ClInclude Include="soundmanager.h" />
     <ClInclude Include="texture2d.h" />
+    <ClInclude Include="texturemanager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

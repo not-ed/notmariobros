@@ -28,17 +28,21 @@ public:
 	~SoundManager();
 	static SoundManager* Instance();
 
+	void LoadAssets();
+	void Shutdown();
+
 	void PlaySound(SOUND::ID id);
 	void PlayMusic(MUSIC::ID id);
 	void StopMusic();
 
 private:
 	SoundManager();
-	void LoadAssets();
 
 	static SoundManager* m_instance;
 	Mix_Chunk* sounds[SOUND::ID::count];
 	Mix_Music* music[MUSIC::ID::count];
+
+	bool initialized = false;
 };
 
 #endif
