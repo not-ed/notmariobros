@@ -3,7 +3,7 @@
 CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map) : Character(renderer, imagePath, start_position, map) {
 	m_movement_speed = MOVEMENTSPEED;
 	anim.SwitchTexture(TEXTURE::ID::MARIO_IDLE);
-	anim.SetAnimationSpeed(0.14f);
+	anim.SetAnimationSpeed(0.09f);
 }
 
 void CharacterMario::Update(float deltaTime, SDL_Event e) {
@@ -52,4 +52,9 @@ void CharacterMario::Update(float deltaTime, SDL_Event e) {
 
 void CharacterMario::Render() {
 	anim.Render(m_position,0.0);
+	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 5)), FONT::ID::REGULAR, FONT::ALLIGNMENT::LEFT);
+	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 4)), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
+	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 3)), FONT::ID::LUIGI, FONT::ALLIGNMENT::LEFT);
+	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 2)), FONT::ID::GOLD, FONT::ALLIGNMENT::LEFT);
+	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::SILVER, FONT::ALLIGNMENT::LEFT);
 }

@@ -3,6 +3,7 @@
 #define CHARACTERMARIO_H
 
 #include "character.h"
+#include "textrenderer.h"
 
 class CharacterMario : public Character
 {

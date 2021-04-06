@@ -18,6 +18,21 @@ struct Vector2D
 	}
 };
 
+struct IntVector2D {
+	int x;
+	int y;
+
+	IntVector2D() {
+		x = 0.0f;
+		y = 0.0f;
+	}
+
+	IntVector2D(int initial_x, int initial_y) {
+		x = initial_x;
+		y = initial_y;
+	}
+};
+
 enum SCREENS {
 	SCREEN_INTRO,
 	SCREEN_MENU,

@@ -155,6 +155,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="powblock.cpp" />
     <ClCompile Include="soundmanager.cpp" />
+    <ClCompile Include="textrenderer.cpp" />
     <ClCompile Include="texture2d.cpp" />
     <ClCompile Include="texturemanager.cpp" />
   </ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="levelmap.h" />
     <ClInclude Include="powblock.h" />
     <ClInclude Include="soundmanager.h" />
+    <ClInclude Include="textrenderer.h" />
     <ClInclude Include="texture2d.h" />
     <ClInclude Include="texturemanager.h" />
   </ItemGroup>

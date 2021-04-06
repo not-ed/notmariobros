@@ -8,6 +8,7 @@
 #include <SDL_mixer.h>
 #include "soundmanager.h"
 #include "texturemanager.h"
+#include "textrenderer.h"
 
 #include <iostream>
 using namespace std;
@@ -92,6 +93,7 @@ bool InitSDL() {
 	}
 	TextureManager::Instance()->LoadAssets(g_renderer);
 	SoundManager::Instance()->LoadAssets();
+	Text::Initialize(g_renderer);
 	
 	return true;
 }
@@ -114,6 +116,9 @@ void CloseSDL() {
 
 	// Shutdown texture manager
 	TextureManager::Instance()->Shutdown();
+
+	// Shutdown the text renderer
+	Text::Shutdown();
 
 	// Quit additional SDL systems
 	IMG_Quit();
