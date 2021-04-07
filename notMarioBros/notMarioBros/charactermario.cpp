@@ -52,9 +52,6 @@ void CharacterMario::Update(float deltaTime, SDL_Event e) {
 
 void CharacterMario::Render() {
 	anim.Render(m_position,0.0);
-	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 5)), FONT::ID::REGULAR, FONT::ALLIGNMENT::LEFT);
-	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 4)), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
-	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 3)), FONT::ID::LUIGI, FONT::ALLIGNMENT::LEFT);
-	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - (24 * 2)), FONT::ID::GOLD, FONT::ALLIGNMENT::LEFT);
-	Text::Draw("Hello! :D", IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::SILVER, FONT::ALLIGNMENT::LEFT);
+
+	Text::Draw(" x3", IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
 }

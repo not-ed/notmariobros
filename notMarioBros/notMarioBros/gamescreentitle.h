@@ -5,6 +5,9 @@
 
 #include "gamescreen.h"
 #include "commons.h"
+#include "textrenderer.h"
+#include "texturemanager.h"
+#include "score.h"
 
 //Forward declaration
 class Texture2D;
@@ -19,9 +22,8 @@ public:
 	void Update(float deltaTime, SDL_Event e) override;
 
 private:
-	Texture2D* m_background_texture;
-
 	bool SetUpLevel();
+	HighScoreData scoreData;
 };
 
 #endif

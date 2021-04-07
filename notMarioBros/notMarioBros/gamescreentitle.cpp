@@ -11,12 +11,31 @@ GameScreenTitle::GameScreenTitle(SDL_Renderer* renderer) : GameScreen(renderer) 
 
 GameScreenTitle::~GameScreenTitle()
 {
-	delete m_background_texture;
-	m_background_texture = nullptr;
+
 }
 
 void GameScreenTitle::Render() {
-	m_background_texture->Render(Vector2D(), SDL_FLIP_NONE);
+	//56, 32 (logo)
+	TextureManager::Instance()->GetTexture(TEXTURE::ID::LOGO)->Render(Vector2D(56, 32), SDL_FLIP_NONE, 0.0);
+	//160 192
+	Text::Draw("TOP PLUMBERS", IntVector2D(160, 192), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
+	//144,224
+	for (int i = 0; i < SCORE_TABLE_SIZE; i++)
+	{
+		FONT::ID i_font;
+		if (i == 0)
+		{
+			i_font = FONT::ID::GOLD;  // Gold Text (1st Place)
+		}
+		else if (i <= 4) {
+			i_font = FONT::ID::SILVER;// Silver Text (2nd-5th Place)
+		}
+		else {
+			i_font = FONT::ID::REGULAR; // Normal Text (6th-10th Place)
+		}
+		Text::Draw(scoreData.GetName(i), IntVector2D(144, 224 + (16 * i)), i_font, FONT::ALLIGNMENT::LEFT);
+		Text::Draw(std::to_string(scoreData.GetScore(i)), IntVector2D(367, 224 + (16 * i)), i_font, FONT::ALLIGNMENT::RIGHT);
+	}
 }
 
 void GameScreenTitle::Update(float deltaTime, SDL_Event e) {
@@ -25,16 +44,9 @@ void GameScreenTitle::Update(float deltaTime, SDL_Event e) {
 
 bool GameScreenTitle::SetUpLevel() {
 	SoundManager::Instance()->StopMusic();
-
-	// Load background texture
-	m_background_texture = new Texture2D(m_renderer);
-	if (!m_background_texture->LoadFromFile("Images/titletest.bmp"))
-	{
-		std::cerr << "[!] Failed to load background texture." << std::endl;
-		return false;
-	}
-
 	SoundManager::Instance()->PlayMusic(MUSIC::ID::UNDERWORLD);
+
+	scoreData = HighScore::GetLatestHighscore();
 
 	return true;
 }

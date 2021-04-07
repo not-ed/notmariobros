@@ -4,6 +4,10 @@ TextureManager* TextureManager::m_instance = nullptr;
 
 void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 	if (!initialized) {
+		textures[TEXTURE::ID::LOGO] = new Texture2D(renderer);
+		textures[TEXTURE::ID::LOGO]->LoadFromFile("Images/logo.png");
+		frameCount[TEXTURE::ID::LOGO] = 1;
+
 		textures[TEXTURE::ID::POW_BLOCK] = new Texture2D(renderer);
 		textures[TEXTURE::ID::POW_BLOCK]->LoadFromFile("Images/PowBlock.png");
 		frameCount[TEXTURE::ID::POW_BLOCK] = 3;
@@ -67,6 +71,7 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 
 TextureManager::~TextureManager()
 {
+	textures[TEXTURE::ID::LOGO]->Free();
 	textures[TEXTURE::ID::POW_BLOCK]->Free();
 	textures[TEXTURE::ID::FIREBALL]->Free();
 	textures[TEXTURE::ID::MARIO_IDLE]->Free();
@@ -82,6 +87,7 @@ TextureManager::~TextureManager()
 	textures[TEXTURE::ID::CRAB]->Free();
 	textures[TEXTURE::ID::CRAB_STUN]->Free();
 
+	delete textures[TEXTURE::ID::LOGO];
 	delete textures[TEXTURE::ID::POW_BLOCK];
 	delete textures[TEXTURE::ID::FIREBALL];
 	delete textures[TEXTURE::ID::MARIO_IDLE];

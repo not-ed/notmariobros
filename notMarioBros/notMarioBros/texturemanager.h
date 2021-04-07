@@ -8,6 +8,7 @@
 namespace TEXTURE {
 	enum ID {
 		NONE,
+		LOGO,
 		POW_BLOCK,
 		FIREBALL,
 		MARIO_IDLE,

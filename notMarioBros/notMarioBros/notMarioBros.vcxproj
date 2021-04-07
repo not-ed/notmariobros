@@ -154,6 +154,7 @@
     <ClCompile Include="levelmap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="powblock.cpp" />
+    <ClCompile Include="score.cpp" />
     <ClCompile Include="soundmanager.cpp" />
     <ClCompile Include="textrenderer.cpp" />
     <ClCompile Include="texture2d.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="koopa.h" />
     <ClInclude Include="levelmap.h" />
     <ClInclude Include="powblock.h" />
+    <ClInclude Include="score.h" />
     <ClInclude Include="soundmanager.h" />
     <ClInclude Include="textrenderer.h" />
     <ClInclude Include="texture2d.h" />

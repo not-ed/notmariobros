@@ -1,26 +1,2 @@
-﻿  charactermario.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  gamescreenlevel1.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(31,20): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(42,20): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(167,20): warning C4018: '<': signed/unsigned mismatch
-  gamescreenmanager.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  main.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  textrenderer.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Generating Code...
+﻿  score.cpp
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe
