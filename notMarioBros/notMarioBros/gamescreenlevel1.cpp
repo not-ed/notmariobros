@@ -201,7 +201,7 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 						m_enemies[i]->SetAlive(false);
 					}
 					else {
-						//TODO: Kill Mario/Luigi
+						mario_character->SetAlive(false);
 					}
 				}
 			}

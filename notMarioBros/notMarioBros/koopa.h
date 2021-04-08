@@ -5,7 +5,6 @@
 #include "character.h"
 #include "constants.h"
 #include "commons.h"
-#include "soundmanager.h"
 #include "timer.h"
 
 class CharacterKoopa : public Character

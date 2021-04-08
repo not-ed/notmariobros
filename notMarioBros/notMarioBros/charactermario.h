@@ -5,6 +5,7 @@
 #include "character.h"
 #include "textrenderer.h"
 #include "timer.h"
+#include <string>
 
 class CharacterMario : public Character
 {
@@ -14,8 +15,13 @@ public:
 
 	void Update(float deltaTime, SDL_Event e);
 	void Render();
-private:
+
+protected:
+	void OnKill();
+	void Respawn();
 	Timer respawnTimer;
+	Vector2D spawnPoint;
+	int remainingLives = 3;
 };
 
 #endif

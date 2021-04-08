@@ -123,10 +123,11 @@ void Character::CancelJump() {
 }
 
 void Character::SetAlive(bool isAlive) {
-	m_alive = isAlive;
-	if (!m_alive) {
+	if (m_alive && !isAlive)
+	{
 		OnKill();
 	}
+	m_alive = isAlive;
 }
 
 void Character::OnKill() {

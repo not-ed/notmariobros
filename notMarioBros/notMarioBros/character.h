@@ -9,6 +9,7 @@
 #include "texture2d.h"
 #include "levelmap.h"
 #include "animator.h"
+#include "soundmanager.h"
 
 using namespace std;
 
