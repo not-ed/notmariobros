@@ -159,6 +159,7 @@
     <ClCompile Include="textrenderer.cpp" />
     <ClCompile Include="texture2d.cpp" />
     <ClCompile Include="texturemanager.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="SDL2\SDL\SDL2.lib" />
@@ -187,6 +188,7 @@
     <ClInclude Include="textrenderer.h" />
     <ClInclude Include="texture2d.h" />
     <ClInclude Include="texturemanager.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,7 +6,7 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 	if (!initialized) {
 		textures[TEXTURE::ID::LOGO] = new Texture2D(renderer);
 		textures[TEXTURE::ID::LOGO]->LoadFromFile("Images/logo.png");
-		frameCount[TEXTURE::ID::LOGO] = 1;
+		frameCount[TEXTURE::ID::LOGO] = 3;
 
 		textures[TEXTURE::ID::POW_BLOCK] = new Texture2D(renderer);
 		textures[TEXTURE::ID::POW_BLOCK]->LoadFromFile("Images/PowBlock.png");

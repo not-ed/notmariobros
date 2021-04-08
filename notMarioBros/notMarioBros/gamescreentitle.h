@@ -8,6 +8,8 @@
 #include "textrenderer.h"
 #include "texturemanager.h"
 #include "score.h"
+#include "timer.h"
+#include "animator.h"
 
 //Forward declaration
 class Texture2D;
@@ -24,6 +26,10 @@ public:
 private:
 	bool SetUpLevel();
 	HighScoreData scoreData;
+	Timer scoreTableTimer;
+	int displayedScores = 0;
+	bool displayingScores = false;
+	Animator logo = Animator(TEXTURE::ID::LOGO, 0.15f);
 };
 
 #endif

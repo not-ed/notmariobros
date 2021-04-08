@@ -147,10 +147,11 @@ bool Update() {
 		if (e.key.keysym.sym == SDLK_1) {
 			game_screen_manager->ChangeScreen(SCREENS::SCREEN_MENU);
 		}
-		if (e.key.keysym.sym == SDLK_2) {
+		if (e.key.keysym.sym == SDLK_2) { 
 			game_screen_manager->ChangeScreen(SCREENS::SCREEN_LEVEL1);
 		}
 		break;
+		// TODO: Implement button presses to start game from main menu.
 	}
 
 	game_screen_manager->Update((float)(new_time - g_old_time) / 1000.0f,e);

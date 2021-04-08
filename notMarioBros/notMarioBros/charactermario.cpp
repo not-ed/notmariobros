@@ -7,6 +7,9 @@ CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2
 }
 
 void CharacterMario::Update(float deltaTime, SDL_Event e) {
+
+	std::cout << deltaTime << std::endl;
+
 	switch (e.type)
 	{
 	case SDL_KEYDOWN:
