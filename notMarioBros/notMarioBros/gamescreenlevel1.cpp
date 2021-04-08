@@ -37,20 +37,22 @@ GameScreenLevel1::~GameScreenLevel1()
 
 void GameScreenLevel1::Render() {
 
-	m_background_texture->Render(Vector2D(0, m_background_yPos), SDL_FLIP_NONE);
+	
 
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
 		m_enemies[i]->Render();
 	}
 
-	//m_background_texture->Render(Vector2D(0,m_background_yPos), SDL_FLIP_NONE);
+	m_background_texture->Render(Vector2D(0, m_background_yPos), SDL_FLIP_NONE);
 
 	//Render characters
 	mario_character->Render();
 	luigi_character->Render();
 
 	m_pow_block->Render();
+
+	
 }
 
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {

@@ -4,6 +4,7 @@
 
 #include "character.h"
 #include "textrenderer.h"
+#include "timer.h"
 
 class CharacterMario : public Character
 {
@@ -14,7 +15,7 @@ public:
 	void Update(float deltaTime, SDL_Event e);
 	void Render();
 private:
-
+	Timer respawnTimer;
 };
 
 #endif

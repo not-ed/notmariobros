@@ -4,6 +4,8 @@ TextureManager* TextureManager::m_instance = nullptr;
 
 void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 	if (!initialized) {
+		textures[TEXTURE::ID::NONE] = new Texture2D(renderer);
+
 		textures[TEXTURE::ID::LOGO] = new Texture2D(renderer);
 		textures[TEXTURE::ID::LOGO]->LoadFromFile("Images/logo.png");
 		frameCount[TEXTURE::ID::LOGO] = 3;
@@ -71,6 +73,7 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 
 TextureManager::~TextureManager()
 {
+	textures[TEXTURE::ID::NONE]->Free();
 	textures[TEXTURE::ID::LOGO]->Free();
 	textures[TEXTURE::ID::POW_BLOCK]->Free();
 	textures[TEXTURE::ID::FIREBALL]->Free();
@@ -87,6 +90,7 @@ TextureManager::~TextureManager()
 	textures[TEXTURE::ID::CRAB]->Free();
 	textures[TEXTURE::ID::CRAB_STUN]->Free();
 
+	delete textures[TEXTURE::ID::NONE];
 	delete textures[TEXTURE::ID::LOGO];
 	delete textures[TEXTURE::ID::POW_BLOCK];
 	delete textures[TEXTURE::ID::FIREBALL];
@@ -110,7 +114,7 @@ int TextureManager::GetFrameCount(TEXTURE::ID texture) {
 	{
 		return frameCount[texture];
 	}
-	else return 0;
+	else return 1;
 }
 
 TextureManager* TextureManager::Instance() {

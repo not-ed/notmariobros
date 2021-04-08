@@ -15,6 +15,10 @@ public:
 	void SetAnimationSpeed(float speed) { animationSpeed = speed; }
 	void SetFrame(int frame) { currentFrame = frame; }
 	void SetFlip(SDL_RendererFlip state) { flipState = state; }
+	TEXTURE::ID GetTextureID() { return currentSprite; }
+	int GetFrameCount() { return TextureManager::Instance()->GetFrameCount(currentSprite); }
+	int GetFrameWidth() { return TextureManager::Instance()->GetTexture(currentSprite)->GetWidth() / GetFrameCount(); }
+	int GetFrameHeight() { return TextureManager::Instance()->GetTexture(currentSprite)->GetHeight(); }
 private:
 	TEXTURE::ID currentSprite = TEXTURE::ID::NONE;
 	float animationSpeed;

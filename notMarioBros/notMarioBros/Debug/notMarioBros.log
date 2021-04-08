@@ -1,11 +1,6 @@
-﻿  gamescreenmanager.cpp
+﻿  character.cpp
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,114): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  gamescreentitle.cpp
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  timer.cpp
-  Generating Code...
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(28,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

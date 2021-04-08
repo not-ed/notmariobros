@@ -7,11 +7,10 @@ CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, string imagePath, Vector2
 	m_position = start_position;
 	m_injured = false;
 
-	m_single_sprite_w = m_texture->GetWidth() / 3;
-	m_single_sprite_h = m_texture->GetHeight();
-
 	anim.SwitchTexture(TEXTURE::ID::KOOPA);
 	anim.SetAnimationSpeed(0.1f);
+
+	injuryTimer.SetTime(INJURED_TIME, false);
 }
 
 CharacterKoopa::~CharacterKoopa() {
@@ -20,6 +19,8 @@ CharacterKoopa::~CharacterKoopa() {
 
 void CharacterKoopa::Update(float deltaTime, SDL_Event e) {
 	Character::Update(deltaTime, e);
+	injuryTimer.Update(deltaTime);
+	anim.Update(deltaTime);
 
 	if (!m_injured) {
 		if (m_facing_direction == FACING_LEFT) {
@@ -37,48 +38,30 @@ void CharacterKoopa::Update(float deltaTime, SDL_Event e) {
 		m_moving_left = false;
 		m_moving_right = false;
 
-		m_injured_time -= deltaTime;
-
-		if (m_injured_time <= 0.0 && GetAlive()) { 
+		if (injuryTimer.IsExpired() && GetAlive()) { 
 			FlipRightWayUp(); }
 	}
-
-	animTime += deltaTime;
-	if (animTime > (animSpeed))
-	{
-		currentAnimFrame++;
-		animTime = 0.0f;
-	}
-
-	anim.Update(deltaTime);
-
 }
 
 void CharacterKoopa::Render() {
-	// The leftmost position of the sprite we want to draw
-	float left = m_single_sprite_w * (currentAnimFrame % 3);
-	
-
-	// If injured, then use the second frame on the koopa sprite sheet (injured)
+	//Draw sprite in the corresponding facing direction
 	if (m_injured) { anim.SwitchTexture(TEXTURE::ID::KOOPA_STUN); }
 
-	// Establish portion of koopa sprite sheet to be drawn
-	SDL_Rect portion_of_sprite = {left,0,m_single_sprite_w,m_single_sprite_h};
-
-	// Establish where to draw current sprite
-	SDL_Rect destRect = { (int)(m_position.x),(int)(m_position.y),m_single_sprite_w,m_single_sprite_h };
-
-	//Draw sprite in the corresponding facing direction
-	if (m_facing_direction == FACING_RIGHT) { anim.SetFlip(SDL_FLIP_NONE); }
-	else { anim.SetFlip(SDL_FLIP_HORIZONTAL); }
+	if (m_facing_direction == FACING_RIGHT) { 
+		anim.SetFlip(SDL_FLIP_NONE); 
+	} else { 
+		anim.SetFlip(SDL_FLIP_HORIZONTAL); 
+	}
 
 	anim.Render(m_position,0.0);
+
+	Debug_RenderHitbox();
 }
 
 void CharacterKoopa::TakeDamage() {
 	m_injured = true;
-	m_injured_time = INJURED_TIME;
 	Jump(INJURY_JUMP_FORCE);
+	injuryTimer.Reset();
 }
 
 void CharacterKoopa::Jump(float force) {

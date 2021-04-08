@@ -10,6 +10,7 @@
 #include "koopa.h"
 #include "levelmap.h"
 #include <vector>
+#include "texturemanager.h"
 
 //Forward declarations
 class Texture2D;

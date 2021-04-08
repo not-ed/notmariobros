@@ -43,7 +43,7 @@ void Character::Render() {
 
 void Character::Update(float deltaTime, SDL_Event e) {
 	//Collision position
-	int centralX_position = (int)(m_position.x + (m_texture->GetWidth() * 0.5)) / TILE_WIDTH;
+	int centralX_position = (int)(m_position.x + ((anim.GetFrameWidth() * .5f))) / TILE_WIDTH;
 	int foot_position = (int)(m_position.y + m_texture->GetHeight()) / TILE_HEIGHT;
 
 	if (m_jumping) {
@@ -91,6 +91,7 @@ void Character::MoveLeft(float deltaTime) {
 
 void Character::MoveRight(float deltaTime) {
 	m_facing_direction = FACING::FACING_RIGHT;
+	float prev_x = m_position.x;
 	m_position.x += deltaTime * m_movement_speed;
 }
 
@@ -130,4 +131,18 @@ void Character::SetAlive(bool isAlive) {
 
 void Character::OnKill() {
 	Jump(KILL_JUMP_FORCE);
+}
+
+void Character::Debug_RenderHitbox() {
+	Rect2D r = GetCollisionBox();
+	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);
+	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ (int)r.x,(int)r.y,(int)r.width,(int)r.height });
+
+	int central_x = (int)(m_position.x + ((anim.GetFrameWidth() * .5f)));
+	int foot_position = (int)(m_position.y + m_texture->GetHeight());
+	SDL_SetRenderDrawColor(m_renderer, 0, 255, 255, 255);
+	
+	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
+
+	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
 }

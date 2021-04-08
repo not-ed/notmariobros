@@ -25,13 +25,15 @@ public:
 	void SetPosition(Vector2D new_position);
 	Vector2D GetPosition();
 	float GetCollisionRadius();
-	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_texture->GetWidth(), m_texture->GetHeight()); }
+	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, anim.GetFrameWidth(), anim.GetFrameHeight()); }
 
 	bool IsJumping() { return m_jumping; }
 	void CancelJump();
 
 	void SetAlive(bool isAlive);
 	bool GetAlive() { return m_alive; }
+
+	void Debug_RenderHitbox();
 
 private:
 	bool m_alive;

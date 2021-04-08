@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "commons.h"
 #include "soundmanager.h"
+#include "timer.h"
 
 class CharacterKoopa : public Character
 {
@@ -23,19 +24,23 @@ public:
 
 private:
 	
-	float m_single_sprite_w;
-	float m_single_sprite_h;
+	/*float m_single_sprite_w;
+	float m_single_sprite_h;*/
 
+
+	Timer injuryTimer;
 	bool m_injured;
-	float m_injured_time;
 	void FlipRightWayUp();
+	
+	/*float m_injured_time;*/
+	
 
 	void OnKill();
 	void FlipDirection();
 
-	int currentAnimFrame = 0;
+	/*int currentAnimFrame = 0;
 	float animSpeed = 0.1f;
-	float animTime = 0.0f;
+	float animTime = 0.0f;*/
 
 };
 

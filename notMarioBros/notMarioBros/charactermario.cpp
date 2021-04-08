@@ -4,11 +4,13 @@ CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2
 	m_movement_speed = MOVEMENTSPEED;
 	anim.SwitchTexture(TEXTURE::ID::MARIO_IDLE);
 	anim.SetAnimationSpeed(0.09f);
+
+
+	respawnTimer.SetTime(4.0f, false);
 }
 
 void CharacterMario::Update(float deltaTime, SDL_Event e) {
-
-	std::cout << deltaTime << std::endl;
+	respawnTimer.Update(deltaTime);
 
 	switch (e.type)
 	{
@@ -55,6 +57,6 @@ void CharacterMario::Update(float deltaTime, SDL_Event e) {
 
 void CharacterMario::Render() {
 	anim.Render(m_position,0.0);
-
+	Debug_RenderHitbox();
 	Text::Draw(" x3", IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
 }
