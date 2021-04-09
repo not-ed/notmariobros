@@ -88,7 +88,9 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {
 
 	//Update character
 	mario_character->Update(deltaTime, e);
+	QueryLevelBounds(mario_character);
 	luigi_character->Update(deltaTime, e);
+	QueryLevelBounds(luigi_character);
 
 	UpdatePOWBlock();
 
@@ -177,28 +179,24 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 		int enemyIndexToDelete = -1;
 		for (unsigned int i = 0; i < m_enemies.size(); i++)
 		{
-			// If enemy is on the bottom row of level tiles.
-			if (m_enemies[i]->GetPosition().y > 300.0f) {
-				// Enemy is off-screen horizontally.
-				if (m_enemies[i]->GetPosition().x < (float)(-m_enemies[i]->GetCollisionBox().width * 0.5f) || 
-				m_enemies[i]->GetPosition().x > SCREEN_WIDTH - (float)(m_enemies[i]->GetCollisionBox().width * 0.55f)) {
-					m_enemies[i]->SetAlive(false);
-				}
-			}
+		
+			QueryLevelBounds(m_enemies[i]);
 
-			//Perform actual update
+			// Perform actual update
 			m_enemies[i]->Update(deltaTime, e);
 
-			//Check for enemy-to-player collision
+			// Check for enemy-to-player collision
 			if ((m_enemies[i]->GetPosition().y > 300.0f || m_enemies[i]->GetPosition().y <= 64.0f) && 
 				(m_enemies[i]->GetPosition().x < 64.0f || m_enemies[i]->GetPosition().x > SCREEN_WIDTH - 96.0f))
 			{
-				//Ignore collisions; behind level pipe.
+				// Ignore collisions; behind level pipe.
 			}
 			else {
-				if (Collisions::Instance()->Circle(m_enemies[i],mario_character)) {
-					if (m_enemies[i]->GetInjured() && m_enemies[i]->GetAlive()) {
-						m_enemies[i]->SetAlive(false);
+				if (Collisions::Instance()->Box(m_enemies[i]->GetCollisionBox(),mario_character->GetCollisionBox())) {
+					if (m_enemies[i]->GetInjured()) {
+						if (m_enemies[i]->GetAlive()) {
+							m_enemies[i]->SetAlive(false);
+						}
 					}
 					else {
 						mario_character->SetAlive(false);
@@ -223,4 +221,20 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 void GameScreenLevel1::CreateKoopa(Vector2D position, FACING direction, float speed) {
 	CharacterKoopa* koopa = new CharacterKoopa(m_renderer,"Images/Koopa.png",position,m_level_map,direction,speed);
 	m_enemies.push_back(koopa);
+}
+
+void GameScreenLevel1::QueryLevelBounds(Character* chara) {
+	Vector2D char_pos = chara->GetPosition();
+	Rect2D char_col = chara->GetCollisionBox();
+
+	if ((char_pos.x) > SCREEN_WIDTH) //off bounds on the right side
+	{
+		char_pos.x = -(char_col.width) + 1;
+	}
+	else if ((char_pos.x + char_col.width) < 0){ //off bounds on the left side
+		char_pos.x = SCREEN_WIDTH - 1;
+	}
+
+	chara->SetPosition(char_pos);
+
 }

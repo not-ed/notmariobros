@@ -28,6 +28,8 @@ public:
 
 	void UpdatePOWBlock();
 
+	void QueryLevelBounds(Character* chara);
+
 private:
 	Texture2D* m_background_texture;
 

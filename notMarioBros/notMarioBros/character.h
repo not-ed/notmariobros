@@ -36,6 +36,7 @@ public:
 
 	void Debug_RenderHitbox();
 
+	bool InLevelBounds();
 private:
 	bool m_alive;
 	LevelMap* m_current_level_map;
@@ -62,6 +63,7 @@ protected:
 	virtual void AddGravity(float deltaTime);
 	virtual void Jump(float force);
 	virtual void OnKill();
+	
 
 	Animator anim = Animator(TEXTURE::ID::NONE,0.0f);
 

@@ -55,9 +55,9 @@ void Character::Update(float deltaTime, SDL_Event e) {
 		}
 	}
 
-	if(m_current_level_map->GetTileAt(foot_position,centralX_position) == 0 || !m_alive){
+	if(InLevelBounds() && m_current_level_map->GetTileAt(foot_position,centralX_position) == 0 || !m_alive || (!InLevelBounds() && m_jumping)){
 		AddGravity(deltaTime);
-
+	
 		// This is a bit hacky, if this starts causing problems then a different approach to jumping will need to be considered later on.
 		m_can_jump = false;
 	}
@@ -146,4 +146,20 @@ void Character::Debug_RenderHitbox() {
 	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+}
+
+bool Character::InLevelBounds() {
+	Rect2D col = GetCollisionBox();
+	//Over bounds on Left side
+	if (m_position.x < 0)
+	{
+		return false;
+	}
+	// Over bounds of right side
+	if (m_position.x+col.width > SCREEN_WIDTH)
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -11,7 +11,7 @@ CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2
 
 void CharacterMario::Update(float deltaTime, SDL_Event e) {
 	respawnTimer.Update(deltaTime);
-	std::cout << remainingLives << std::endl;
+
 	if (GetAlive())
 	{
 		switch (e.type)
