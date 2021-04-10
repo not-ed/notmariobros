@@ -7,13 +7,13 @@
 class GameScreen
 {
 protected:
-	SDL_Renderer* m_renderer;
+	SDL_Renderer* renderer;
 public:
-	GameScreen(SDL_Renderer* renderer);
+	GameScreen(SDL_Renderer* game_renderer);
 	virtual ~GameScreen();
 
-	virtual void Render();
-	virtual void Update(float deltaTime, SDL_Event e);
+	virtual void Render() {};
+	virtual void Update(float delta_time, SDL_Event e) {};
 };
 
 #endif

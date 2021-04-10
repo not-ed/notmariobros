@@ -31,19 +31,30 @@ namespace TEXTURE {
 	};
 }
 
+// Singleton class for keeping a single copy of each sprite/texture in one place that can be accessed by the whole program if needed.
 class TextureManager
 {
 public:
 	~TextureManager();
+
+	// Return a pointer to the singleton object so that requests for a collision check can be made.
 	static TextureManager* Instance();
-	void LoadAssets(SDL_Renderer* renderer);
+	
 	int GetFrameCount(TEXTURE::ID texture);
-	Texture2D* GetTexture(TEXTURE::ID texture) { return textures[texture]; };
+	Texture2D* GetTexture(TEXTURE::ID texture) { return textures[texture]; }
+
+	//Startup/Shutdown
+	void LoadAssets(SDL_Renderer* renderer);
 	void Shutdown();
 private:
-	static TextureManager* m_instance;
+
+	static TextureManager* instance;
+
 	Texture2D* textures[TEXTURE::ID::count];
+	// How many frames are in a given Texture
 	int frameCount[TEXTURE::ID::count];
+
+	// If the singleton object has already been initialized.
 	bool initialized = false;
 };
 

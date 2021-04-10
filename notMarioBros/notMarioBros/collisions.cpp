@@ -2,22 +2,20 @@
 #include "character.h"
 
 //Initialize instance to nullptr
-Collisions* Collisions::m_instance = nullptr;
-
-Collisions::Collisions() {
-
-}
+Collisions* Collisions::instance = nullptr;
 
 Collisions::~Collisions() {
-	m_instance = nullptr;
+	delete instance;
+	instance = nullptr;
 }
 
 Collisions* Collisions::Instance() {
-	if (!m_instance) {
-		m_instance = new Collisions;
+	// If no instance exists yet of the Collisions class, then create one first, which will be the singleton object from now on.
+	if (!instance) {
+		instance = new Collisions;
 	}
 
-	return m_instance;
+	return instance;
 }
 
 bool Collisions::Circle(Character* character1, Character* character2) {
@@ -29,40 +27,31 @@ bool Collisions::Circle(Character* character1, Character* character2) {
 
 	double combined_distance = (character1->GetCollisionRadius() + character2->GetCollisionRadius());
 
+	// If the distance between the 2 points is shorter than both circle's radius combined, then they would be intersecting, indicating a collision.
 	return distance < combined_distance;
 }
 
 bool Collisions::Circle(Vector2D point1, float radius1, Vector2D point2, float radius2) {
-	//Calculate distance between the 2 points.
+	// Calculate the vector that seperates the two points.
 	Vector2D vec = Vector2D(point1.x - point2.x, point1.y - point2.y);
 
-	// Length of the vector
+	// Calculate the resulting vector's length
 	double distance = sqrt((vec.x * vec.x) + (vec.y * vec.y));
 
 	double combined_distance = radius1 + radius2;
 
+	// If the distance between the 2 points is shorter than both circle's radius combined, then they would be intersecting, indicating a collision.
 	return distance < combined_distance;
 }
 
-
-//// Original "Half" box collision
-//bool Collisions::Box(Rect2D rect1, Rect2D rect2) {
-//	if (rect1.x + (rect1.width/2) > rect2.x && rect1.x + (rect1.width/2)<rect2.x + rect2.width && rect1.y + (rect1.height/2)>rect2.y && rect1.y + (rect1.height/2) < rect2.y + rect2.height) {
-//		return true;
-//	}
-//	return false;
-//}
-
 bool Collisions::Box(Rect2D rect1, Rect2D rect2) {
-	//Horizontal intersection
-	if (((rect1.x+rect1.width) > rect2.x) && (rect1.x < (rect2.x+rect2.width)) && ((rect1.y + rect1.height) > rect2.y) && (rect1.y < (rect2.y + rect2.height))) {
+	// If both Rectangles intersect based on the positioning of their points relative to each other, then a collision has occured.
+	if (((rect1.x+rect1.width) > rect2.x) &&
+		(rect1.x < (rect2.x+rect2.width)) && 
+		((rect1.y + rect1.height) > rect2.y) &&
+		(rect1.y < (rect2.y + rect2.height))) {
 		return true;
 	}
 
-	//// Vertical intersection#
-	//if ()
-	//{
-	//	return true;
-	//}
 	return false;
 }

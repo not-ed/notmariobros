@@ -11,6 +11,7 @@ namespace HighScore {
 			std::ofstream outFile;
 			HighScoreData data;
 
+			// Truncation wipes the files contents automatically and automatically generates the file if it does not exist already.
 			outFile.open("Data/Score/highscores.nmb", std::ios::trunc);
 
 			std::cout << "Generating new score file..." << std::endl;
@@ -19,8 +20,10 @@ namespace HighScore {
 			{
 				for (int i = 0; i < SCORE_TABLE_SIZE; i++)
 				{
+					// Write "--- 0 \n"
 					outFile << "--- ";
 					outFile << 0 << "\n";
+
 					data.name[i] = "---";
 					data.score[i] = 0;
 				}
@@ -30,7 +33,7 @@ namespace HighScore {
 			return data;
 		}
 
-		// Overwrite the high score file with the entire contents of a HighScoreData object
+		// Write the contents of a HighScoreData packet to file
 		void WriteScoreFileData(HighScoreData score_data) {
 			std::ofstream outFile;
 
@@ -38,6 +41,7 @@ namespace HighScore {
 
 			if (outFile.is_open())
 			{
+				// Write a name and its score to each line
 				for (int i = 0; i < SCORE_TABLE_SIZE; i++)
 				{
 					outFile << score_data.GetName(i) << " ";
@@ -58,6 +62,7 @@ namespace HighScore {
 
 		if (scoreFile.is_open())
 		{
+			// Reach each name and its score in sequence
 			for (int i = 0; i < SCORE_TABLE_SIZE; i++)
 			{
 				scoreFile >> data.name[i];
@@ -66,6 +71,7 @@ namespace HighScore {
 			scoreFile.close();
 		}
 		else {
+			// If a score file doesn't exist, create a new one and return an empty table accordingly.
 			data = CreateFreshDataFile();
 		}
 

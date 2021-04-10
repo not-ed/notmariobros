@@ -2,38 +2,39 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "constants.h"
-
 #include "commons.h"
 #include "gamescreenmanager.h"
 #include <SDL_mixer.h>
 #include "soundmanager.h"
 #include "texturemanager.h"
 #include "textrenderer.h"
-
 #include <iostream>
+
 using namespace std;
 
-SDL_Window* g_window = nullptr;
+SDL_Window* gameWindow = nullptr;
 
-SDL_Renderer* g_renderer = nullptr;
+SDL_Renderer* gameRenderer = nullptr;
 
-GameScreenManager* game_screen_manager;
-Uint32 g_old_time;
+GameScreenManager* gameScreenManager;
 
+// Number of ticks that passed when the last frame was handled, which can be used with the current tick amount to calculate delta time.
+Uint32 previousFrameTime;
+
+bool Update();
 void Render();
 
 bool InitSDL();
 void CloseSDL();
-bool Update();
 
 int main(int argc, char* args[]) {
 
 	if (InitSDL())
 	{
+		// Set up new Game Screen Manager and initialize its current screen to the main menu
+		gameScreenManager = new GameScreenManager(gameRenderer, SCREEN_MENU);
 
-		game_screen_manager = new GameScreenManager(g_renderer, SCREEN_MENU);
-
-		g_old_time = SDL_GetTicks();
+		previousFrameTime = SDL_GetTicks();
 
 		// Whether user wishes to quit / game session is running
 		bool quit = false;
@@ -45,6 +46,7 @@ int main(int argc, char* args[]) {
 		}
 	}
 
+	// Perform shutdown cleanup
 	CloseSDL();
 
 	return 0;
@@ -56,7 +58,7 @@ bool InitSDL() {
 		return false;
 	}
 	else {
-		g_window = SDL_CreateWindow(
+		gameWindow = SDL_CreateWindow(
 			"Not Mario Bros.",
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -64,15 +66,15 @@ bool InitSDL() {
 		);
 
 		// Window failed to be created from above
-		if (g_window == nullptr) {
+		if (gameWindow == nullptr) {
 			cerr << "[!] SDL window was not created. Error: " << SDL_GetError() << endl;
 			return false;
 		}
 
 		// Create renderer
-		g_renderer = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+		gameRenderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED);
 		
-		if (g_renderer != nullptr) {
+		if (gameRenderer != nullptr) {
 			int imageFlags = IMG_INIT_PNG;
 
 			if (!(IMG_Init(imageFlags) & imageFlags)) {
@@ -91,25 +93,27 @@ bool InitSDL() {
 			return false;
 		}
 	}
-	TextureManager::Instance()->LoadAssets(g_renderer);
+
+	// Load texture, sound and font assets.
+	TextureManager::Instance()->LoadAssets(gameRenderer);
 	SoundManager::Instance()->LoadAssets();
-	Text::Initialize(g_renderer);
+	Text::Initialize(gameRenderer);
 	
 	return true;
 }
 
 void CloseSDL() {
 	// Destroy Game Screen Manager
-	delete game_screen_manager;
-	game_screen_manager = nullptr;
+	delete gameScreenManager;
+	gameScreenManager = nullptr;
 
 	// Release Renderer
-	SDL_DestroyRenderer(g_renderer);
-	g_renderer = nullptr;
+	SDL_DestroyRenderer(gameRenderer);
+	gameRenderer = nullptr;
 
 	// Release window and free memory
-	SDL_DestroyWindow(g_window);
-	g_window = nullptr;
+	SDL_DestroyWindow(gameWindow);
+	gameWindow = nullptr;
 
 	// Shutdown sound manager
 	SoundManager::Instance()->Shutdown();
@@ -145,28 +149,30 @@ bool Update() {
 			return true;
 		}
 		if (e.key.keysym.sym == SDLK_1) {
-			game_screen_manager->ChangeScreen(SCREENS::SCREEN_MENU);
+			gameScreenManager->ChangeScreen(SCREENS::SCREEN_MENU);
 		}
 		if (e.key.keysym.sym == SDLK_2) { 
-			game_screen_manager->ChangeScreen(SCREENS::SCREEN_LEVEL1);
+			gameScreenManager->ChangeScreen(SCREENS::SCREEN_LEVEL1);
 		}
 		break;
 		// TODO: Implement button presses to start game from main menu.
 	}
 
-	game_screen_manager->Update((float)(new_time - g_old_time) / 1000.0f,e);
-	g_old_time = new_time;
+	// Dividing the amount of time between the first and last frame in ticks by 1000.0 gives us the deltaTime in milliseconds.
+	gameScreenManager->Update((float)(new_time - previousFrameTime) / 1000.0f,e);
+
+	previousFrameTime = new_time;
 
 	return false;
 }
 
 void Render() {
 	// Clear screen
-	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
-	SDL_RenderClear(g_renderer);
+	SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(gameRenderer);
 
-	game_screen_manager->Render();
+	gameScreenManager->Render();
 
 	// Update Screen
-	SDL_RenderPresent(g_renderer);
+	SDL_RenderPresent(gameRenderer);
 }

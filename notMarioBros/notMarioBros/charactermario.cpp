@@ -1,114 +1,124 @@
 #include "charactermario.h"
 
-CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map) : Character(renderer, imagePath, start_position, map) {
-	m_movement_speed = MOVEMENTSPEED;
-	anim.SwitchTexture(TEXTURE::ID::MARIO_IDLE);
+CharacterMario::CharacterMario(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : Character(renderer, start_position, map) {
+	movementSpeed = MOVEMENTSPEED;
+
+	anim.SwitchTexture(idleTexture);
 	anim.SetAnimationSpeed(0.09f);
+
 	spawnPoint = start_position;
 
 	respawnTimer.SetTime(4.0f, false);
 	invincibilityTimer.SetTime(3.5f, false);
 }
 
-void CharacterMario::Update(float deltaTime, SDL_Event e) {
-	respawnTimer.Update(deltaTime);
-	invincibilityTimer.Update(deltaTime);
+void CharacterMario::Update(float delta_time, SDL_Event e) {
+	respawnTimer.Update(delta_time);
+	invincibilityTimer.Update(delta_time);
 
-	std::cout << IsJumping() << std::endl;
-
-	if (GetAlive())
+	if (IsAlive())
 	{
 		switch (e.type)
 		{
 		case SDL_KEYDOWN:
 			if (e.key.keysym.sym == SDLK_LEFT) {
-				m_moving_left = true;
+				movingLeft = true;
 				anim.SetFlip(SDL_FLIP_HORIZONTAL);
 			}
 			if (e.key.keysym.sym == SDLK_RIGHT) {
-				m_moving_right = true;
+				movingRight = true;
 				anim.SetFlip(SDL_FLIP_NONE);
 			}
 			if (e.key.keysym.sym == SDLK_UP) {
-				if (m_can_jump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(TEXTURE::ID::MARIO_JUMP); }
+				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); }
 			}
 			break;
 		case SDL_KEYUP:
 			if (e.key.keysym.sym == SDLK_LEFT) {
-				m_moving_left = false;
+				movingLeft = false;
 			}
 			if (e.key.keysym.sym == SDLK_RIGHT) {
-				m_moving_right = false;
+				movingRight = false;
 			}
 			break;
 		default:
 			break;
 		}
 
-		if (!m_can_jump) {
-			anim.SwitchTexture(TEXTURE::ID::MARIO_JUMP);
+		if (!canJump) {
+			anim.SwitchTexture(jumpTexture);
 		}
 		else {
-			if (m_moving_left || m_moving_right) {
-				anim.SwitchTexture(TEXTURE::ID::MARIO_RUN);
+			if (movingLeft || movingRight) {
+				anim.SwitchTexture(runTexture);
 			}
 			else {
-				anim.SwitchTexture(TEXTURE::ID::MARIO_IDLE);
+				anim.SwitchTexture(idleTexture);
 			}
 		}
 	}
 	else {
+		// Enough time has passed since dying.
 		if (respawnTimer.IsExpired())
 		{
 			Respawn();
 		}
 	}
 	
-
-	Character::Update(deltaTime, e);
-	anim.Update(deltaTime);
+	Character::Update(delta_time, e);
+	anim.Update(delta_time);
 
 	//Update head hit box
-	headHitBox = Rect2D{ m_position.x,m_position.y - 2,GetCollisionBox().width,4 };
+	headHitBox = Rect2D{ position.x,position.y - 2,GetCollisionBox().width,4 };
 }
 
 void CharacterMario::Render() {
+	// Render the relevant texture and frame from the animator, if mario/luigi is currently invincible rendering will blink for the duration that this occurs.
 	if (!Invincible() || (Invincible() && (int)(invincibilityTimer.RemainingTime() / .10) % 2 == 0)) {
-		anim.Render(m_position, 0.0);
+		anim.Render(position, 0.0);
 	}
 }
 
 void CharacterMario::OnKill() {
 	Character::OnKill();
+
 	remainingLives--;
-	m_moving_left = false;
-	m_moving_right = false;
-	anim.SwitchTexture(TEXTURE::ID::MARIO_DIE);
+
+	// Stay in place horionztally while dying.
+	movingLeft = false;
+	movingRight = false;
+
+	anim.SwitchTexture(dieTexture);
+
 	respawnTimer.Reset();
+
 	SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_DIE);
 }
 
 void CharacterMario::Respawn() {
+	// If the player still has at least 1 life left, then they can respawn.
 	if (remainingLives != 0)
 	{
 		SetAlive(true);
-		m_position = spawnPoint;
+		position = spawnPoint;
 		invincibilityTimer.Reset();
 	}
 	else {
-		//TODO: Game over stuff
+		//TODO: Mark "out of game status"
 	}
 	
 }
 
 void CharacterMario::RenderGUI() {
 	Debug_RenderHitbox();
-	std::string life_count = " x";
-	life_count.append(to_string(remainingLives));
-	Text::Draw(life_count, IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
 
-	SDL_Rect boxt = SDL_Rect{ (int)m_position.x,(int)m_position.y - 2,(int)GetCollisionBox().width,4 };
-	SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
-	SDL_RenderDrawRect(m_renderer, &boxt);
-	SDL_SetRenderDrawColor(m_renderer,255,255,255,255);
+	std::string hud_text = hudNamePrefix;
+	hud_text.append(to_string(remainingLives));
+
+	Text::Draw(hud_text, hudTextPosition, hudFont, hudFontAllignment);
+
+	/*SDL_Rect boxt = SDL_Rect{ (int)position.x,(int)position.y - 2,(int)GetCollisionBox().width,4 };
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	SDL_RenderDrawRect(renderer, &boxt);
+	SDL_SetRenderDrawColor(renderer,255,255,255,255);*/
 }

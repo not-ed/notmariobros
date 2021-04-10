@@ -10,17 +10,19 @@ class GameScreen;
 class GameScreenManager
 {
 public:
-	GameScreenManager(SDL_Renderer* renderer, SCREENS startScreen);
+	GameScreenManager(SDL_Renderer* game_renderer, SCREENS starting_screen);
 	~GameScreenManager();
 
 	void Render();
-	void Update(float deltaTime, SDL_Event e);
+	void Update(float delta_time, SDL_Event e);
 
+	// Get rid of the current screen if it exists and create a new one based on what is passed through
 	void ChangeScreen(SCREENS new_screen);
 
 private:
-	SDL_Renderer* m_renderer;
-	GameScreen* m_current_screen;
+	SDL_Renderer* renderer;
+
+	GameScreen* currentScreen;
 };
 
 #endif

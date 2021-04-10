@@ -1,6 +1,6 @@
 #include "texturemanager.h"
 
-TextureManager* TextureManager::m_instance = nullptr;
+TextureManager* TextureManager::instance = nullptr;
 
 void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 	if (!initialized) {
@@ -142,17 +142,17 @@ int TextureManager::GetFrameCount(TEXTURE::ID texture) {
 }
 
 TextureManager* TextureManager::Instance() {
-	if (!m_instance) {
-		m_instance = new TextureManager();
+	if (!instance) {
+		instance = new TextureManager();
 	}
 
-	return m_instance;
+	return instance;
 }
 
 void TextureManager::Shutdown() {
-	if (m_instance)
+	if (instance)
 	{
-		delete m_instance;
-		m_instance = nullptr;
+		delete instance;
+		instance = nullptr;
 	}
 }

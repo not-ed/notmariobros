@@ -45,9 +45,11 @@ namespace Text {
 
 	void Draw(std::string text, IntVector2D position, FONT::ID font, FONT::ALLIGNMENT allignment) {
 		if (initialized) {
+			// Convert the string into a c-style string and calculate the width of the whole string in pixels.
 			int letter_count = strlen(text.c_str());
 			int text_width = letter_count * CHARACTER_WIDTH;
 
+			// Calculate horizontal text position offset 
 			int text_offset = 0;
 			switch (allignment)
 			{
@@ -64,19 +66,20 @@ namespace Text {
 			SDL_Rect char_rect{ 0,0,CHARACTER_WIDTH,CHARACTER_HEIGHT };
 			SDL_Rect dest_rect{ position.x + text_offset,position.y,CHARACTER_WIDTH,CHARACTER_HEIGHT };
 
-			//std::cout << "TEXT CHAR COUNT: " << letter_count << std::endl;
-
 			for (int i = 0; i < letter_count; i++)
 			{
+				// Get the ASCII representation of the relevant character
 				int char_ascii = (int)text[i];
+
+				// Use the ASCII character to index into the font sprite sheet and obtain to corresponding character.
 				char_rect.x = (char_ascii % CHARACTER_ROW_COUNT)*CHARACTER_WIDTH;
 				char_rect.y = (char_ascii / CHARACTER_ROW_COUNT)*CHARACTER_HEIGHT;
 
+				// Render the character
 				fonts[font]->Render(char_rect, dest_rect, SDL_FLIP_NONE, 0.0);
 
 				dest_rect.x += CHARACTER_WIDTH;
 			}
-
 		}
 	}
 }

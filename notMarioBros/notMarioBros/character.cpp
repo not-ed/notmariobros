@@ -1,134 +1,122 @@
 #include "character.h"
-#include "soundmanager.h"
 
-Character::Character(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map)
+Character::Character(SDL_Renderer* game_renderer, Vector2D start_position, LevelMap* map)
 {
-	m_renderer = renderer;
-	m_position = start_position;
-	m_texture = new Texture2D(renderer);
-	if (!m_texture->LoadFromFile(imagePath)) {
-		cerr << "[!] Failed to load character texture from '" << imagePath << "'." << endl;
-	}
+	renderer = game_renderer;
+	position = start_position;
 
-	m_facing_direction = FACING::FACING_RIGHT;
+	facingDirection = FACING::FACING_RIGHT;
 
-	m_moving_left = false;
-	m_moving_right = false;
+	movingLeft = false;
+	movingRight = false;
 
-	m_collision_radius = 15.0f;
+	collisionRadius = 15.0f;
 
-	m_current_level_map = map;
+	currentLevelMap = map;
 
-	m_alive = true;
+	alive = true;
 }
 
 Character::~Character()
 {
 	// This only needs to be set to null as it would have been holding the renderer PASSED IN when it was constructed.
-	m_renderer = nullptr;
-
-	delete m_texture;
-	m_texture = nullptr;
+	renderer = nullptr;
 }
 
-void Character::Render() {
-	if (m_facing_direction == FACING::FACING_RIGHT)
-	{
-		m_texture->Render(m_position, SDL_FLIP_NONE);
-	}
-	else {
-		m_texture->Render(m_position, SDL_FLIP_HORIZONTAL);
-	}
-}
+void Character::Update(float delta_time, SDL_Event e) {
+	//Update Central X and Foot Positions 
+	centralXPosition = (int)(position.x + ((anim.GetFrameWidth() * .5f))) / TILE_WIDTH;
+	footPosition = (int)(position.y + anim.GetFrameHeight()) / TILE_HEIGHT;
 
-void Character::Update(float deltaTime, SDL_Event e) {
-	//Collision position
-	int centralX_position = (int)(m_position.x + ((anim.GetFrameWidth() * .5f))) / TILE_WIDTH;
-	int foot_position = (int)(m_position.y + m_texture->GetHeight()) / TILE_HEIGHT;
+	if (jumping) {
+		// Decrease jump force over time if jumping to simulate gravity
+		position.y -= jumpForce * delta_time;
+		jumpForce -= JUMP_FORCE_DECREMENT * delta_time;
 
-	if (m_jumping) {
-		m_position.y -= m_jump_force * deltaTime;
-		m_jump_force -= JUMP_FORCE_DECREMENT * deltaTime;
-
-		if (m_jump_force <= 0.0f) {
-			m_jumping = false;
+		if (jumpForce <= 0.0f) {
+			jumping = false;
 		}
 	}
 
-	if(InLevelBounds() && m_current_level_map->GetTileAt(foot_position,centralX_position) == 0 || !m_alive || (!InLevelBounds() && m_jumping)){
-		AddGravity(deltaTime);
-	
-		// This is a bit hacky, if this starts causing problems then a different approach to jumping will need to be considered later on.
-		m_can_jump = false;
+	// If the character is completely inside the level bounds and not stood on a map tile, then add gravity.
+	// Dead characters should continue to fall until off-screen and not consider collision at all.
+	// If a character is not jumping, but also not in level bounds, then they should not be obeying gravity briefly, lest they get stuck in a tile's floor.
+	if(InLevelBounds() && currentLevelMap->GetTileAt(footPosition,centralXPosition) == 0 || !alive || (!InLevelBounds() && jumping)){
+		AddGravity(delta_time);
+		canJump = false;
 	}
 	else {
-		m_can_jump = true;
-		
+		canJump = true;
 	}
 
-	if (m_moving_left)
+	//TODO: this does not need to be 2 boolean variables, this can be tied to an axis multiplier
+	if (movingLeft)
 	{
-		MoveLeft(deltaTime);
+		MoveLeft(delta_time);
 	}
-	else if (m_moving_right)
+	else if (movingRight)
 	{
-		MoveRight(deltaTime);
+		MoveRight(delta_time);
 	}
 
 }
 
 void Character::SetPosition(Vector2D new_position) {
-	m_position = new_position;
+	position = new_position;
 }
 
 Vector2D Character::GetPosition() {
-	return m_position;
+	return position;
 }
 
-void Character::MoveLeft(float deltaTime) {
-	m_facing_direction = FACING::FACING_LEFT;
-	m_position.x -= deltaTime * m_movement_speed;
+//TODO: These 2 functions do not need to be seperate just to change direction, this can be done via an axis multiplier.
+void Character::MoveLeft(float delta_time) {
+	facingDirection = FACING::FACING_LEFT;
+	position.x -= delta_time * movementSpeed;
 }
 
-void Character::MoveRight(float deltaTime) {
-	m_facing_direction = FACING::FACING_RIGHT;
-	float prev_x = m_position.x;
-	m_position.x += deltaTime * m_movement_speed;
+void Character::MoveRight(float delta_time) {
+	facingDirection = FACING::FACING_RIGHT;
+	float prev_x = position.x;
+	position.x += delta_time * movementSpeed;
 }
+//
 
-void Character::AddGravity(float deltaTime) {
-	if (m_position.y + 64 < SCREEN_HEIGHT || !m_alive) {
-		m_position.y += GRAVITY * deltaTime;
+void Character::AddGravity(float delta_time) {
+	// If the character is below the lowest floor of the screen when gravity is applied and still alive, then we cannot move them down further, otherwise they will go off-screen.
+	// This is fine if the character is dead, as the intended effect is to allow them to fall out of the screen's view.
+	if (position.y + 64 < SCREEN_HEIGHT || !alive) {
+		position.y += GRAVITY * delta_time;
 	}
 	else {
-		m_can_jump = true;
+		canJump = true;
 	}
 }
 
 void Character::Jump(float force) {
-	if (!m_jumping) {
-		m_jump_force = force;
-		m_jumping = true;
-		m_can_jump = false;
+	if (!jumping) {
+		jumpForce = force;
+		jumping = true;
+		canJump = false;
 		SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);
 	}
 }
 
 float Character::GetCollisionRadius() {
-	return m_collision_radius;
+	return collisionRadius;
 }
 
 void Character::CancelJump() {
-	m_jumping = false;
-	m_jump_force = 0;
+	jumping = false;
+	jumpForce = 0;
 }
 
-void Character::SetAlive(bool isAlive) {
-	if (m_alive && !isAlive)
+void Character::SetAlive(bool is_alive) {
+	if (alive && !is_alive)
 	{
 		OnKill();
 	}
-	m_alive = isAlive;
+	alive = is_alive;
 }
 
 void Character::OnKill() {
@@ -152,12 +140,12 @@ void Character::Debug_RenderHitbox() {
 bool Character::InLevelBounds() {
 	Rect2D col = GetCollisionBox();
 	//Over bounds on Left side
-	if (m_position.x < 0)
+	if (position.x < 0)
 	{
 		return false;
 	}
 	// Over bounds of right side
-	if (m_position.x+col.width > SCREEN_WIDTH)
+	if (position.x+col.width > SCREEN_WIDTH)
 	{
 		return false;
 	}

@@ -1,9 +1,9 @@
 #include "timer.h"
 
-void Timer::Update(float deltaTime) {
+void Timer::Update(float delta_time) {
 	if (!expired)
 	{
-		remainingTime -= deltaTime;
+		remainingTime -= delta_time;
 		if (remainingTime <= 0.0f)
 		{
 			expired = true;

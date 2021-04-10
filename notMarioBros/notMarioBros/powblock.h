@@ -6,6 +6,8 @@
 #include "commons.h"
 #include "levelmap.h"
 #include "texture2d.h"
+#include "soundmanager.h"
+#include "animator.h"
 
 class PowBlock
 {
@@ -14,21 +16,24 @@ public:
 	~PowBlock();
 
 	void Render();
-	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_single_sprite_w, m_single_sprite_h); }
+	
+	Rect2D GetCollisionBox() { return Rect2D(position.x, position.y, anim.GetFrameWidth(), anim.GetFrameHeight()); }
+
 	void TakeHit();
-	bool IsAvailable() { return m_num_hits_left > 0; }
+
+	// Are any hits left in the POW block?
+	bool IsAvailable() { return hitsLeft > 0; }
 
 private:
-	SDL_Renderer* m_renderer;
-	Vector2D m_position;
-	Texture2D* m_texture;
-	LevelMap* m_level_map;
+	SDL_Renderer* renderer;
 
-	float m_single_sprite_w;
-	float m_single_sprite_h;
-	int m_num_hits_left;
+	Vector2D position;
 
+	LevelMap* levelMap;
+
+	int hitsLeft;
+	
+	Animator anim = Animator(TEXTURE::ID::POW_BLOCK, 0.0f);
 };
-
 
 #endif

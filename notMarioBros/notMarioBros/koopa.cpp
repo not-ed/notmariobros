@@ -1,11 +1,10 @@
 #include "koopa.h"
-#include <iostream>
 
-CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map, FACING start_facing, float movement_speed) : Character(renderer, imagePath, start_position, map) {
-	m_facing_direction = start_facing;
-	m_movement_speed = movement_speed;
-	m_position = start_position;
-	m_injured = false;
+CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float movement_speed) : Character(renderer, start_position, map) {
+	facingDirection = start_facing;
+	movementSpeed = movement_speed;
+	position = start_position;
+	injured = false;
 
 	anim.SwitchTexture(textureRoaming[(angry)]);
 	anim.SetAnimationSpeed(0.1f);
@@ -13,49 +12,49 @@ CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, string imagePath, Vector2
 	injuryTimer.SetTime(INJURED_TIME, false);
 }
 
-CharacterKoopa::~CharacterKoopa() {
+void CharacterKoopa::Update(float delta_time, SDL_Event e) {
+	Character::Update(delta_time, e);
+	injuryTimer.Update(delta_time);
+	anim.Update(delta_time);
 
-}
-
-void CharacterKoopa::Update(float deltaTime, SDL_Event e) {
-	Character::Update(deltaTime, e);
-	injuryTimer.Update(deltaTime);
-	anim.Update(deltaTime);
-	angry = pipeTravelFlag;
+	// Become angry upon travelling through a level pipe.
+	angry = pipeTravelFlag; 
 
 	if (angry) {
-		m_movement_speed = KOOPA_ANGRY_SPEED;
+		movementSpeed = KOOPA_ANGRY_SPEED;
 	}
 	else {
-		m_movement_speed = KOOPA_SPEED;
+		movementSpeed = KOOPA_SPEED;
 	}
 
-	if (!m_injured) {
-		if (m_facing_direction == FACING_LEFT) {
-			m_moving_left = true;
-			m_moving_right = false;
+	if (!injured) {
+		if (facingDirection == FACING_LEFT) {
+			movingLeft = true;
+			movingRight = false;
 		}
-		else if (m_facing_direction == FACING_RIGHT)
+		else if (facingDirection == FACING_RIGHT)
 		{
-			m_moving_left = false;
-			m_moving_right = true;
+			movingLeft = false;
+			movingRight = true;
 		}
 	}
 	else {
-		// Shouldn't be moving
-		m_moving_left = false;
-		m_moving_right = false;
+		// Shouldn't be moving if injured/stunned
+		movingLeft = false;
+		movingRight = false;
 
-		if (injuryTimer.IsExpired() && GetAlive()) { 
-			FlipRightWayUp(); }
+		// Flip right way up after being stunned for a fixed amount of time.
+		if (injuryTimer.IsExpired() && IsAlive()) { 
+			FlipRightWayUp(); 
+		}
 	}
 }
 
 void CharacterKoopa::Render() {
 	//Draw sprite in the corresponding facing direction
-	if (GetAlive())
+	if (IsAlive())
 	{
-		if (m_injured) { 
+		if (injured) { 
 			anim.SwitchTexture(textureStunned[(angry)]);
 		}
 		else {
@@ -67,44 +66,46 @@ void CharacterKoopa::Render() {
 	}
 	
 
-	if (m_facing_direction == FACING_RIGHT) { 
+	if (facingDirection == FACING_RIGHT) {
 		anim.SetFlip(SDL_FLIP_NONE); 
 	} else { 
 		anim.SetFlip(SDL_FLIP_HORIZONTAL); 
 	}
 
-	anim.Render(m_position,0.0);
+	anim.Render(position,0.0);
 
 	Debug_RenderHitbox();
 }
 
 void CharacterKoopa::TakeDamage() {
-	m_injured = true;
+	injured = true;
 	Jump(INJURY_JUMP_FORCE);
 	injuryTimer.Reset();
 }
 
 void CharacterKoopa::Jump(float force) {
-	if (!m_jumping) {
-		m_jump_force = force;
-		m_jumping = true;
-		m_can_jump = false;
+	if (!jumping) {
+		jumpForce = force;
+		jumping = true;
+		canJump = false;
 	}
 }
 
 void CharacterKoopa::FlipRightWayUp() {
+	// Change direction upon flipping right side up
 	FlipDirection();
-	m_injured = false;
+
+	injured = false;
 	anim.SwitchTexture(textureRoaming[(angry)]);
 	Jump(INJURY_JUMP_FORCE);
 }
 
 void CharacterKoopa::FlipDirection() {
-	if (m_facing_direction == FACING::FACING_LEFT) { 
-		m_facing_direction = FACING::FACING_RIGHT; 
+	if (facingDirection == FACING::FACING_LEFT) {
+		facingDirection = FACING::FACING_RIGHT;
 	}
 	else { 
-		m_facing_direction = FACING::FACING_LEFT;
+		facingDirection = FACING::FACING_LEFT;
 	}
 }
 

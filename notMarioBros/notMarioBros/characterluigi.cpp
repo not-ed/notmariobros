@@ -1,7 +1,7 @@
 #include "characterluigi.h"
 
-CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map) : Character(renderer, imagePath, start_position, map) {
-	m_movement_speed = MOVEMENTSPEED;
+CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : Character(renderer, start_position, map) {
+	movementSpeed = MOVEMENTSPEED;
 }
 
 void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
@@ -10,21 +10,21 @@ void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
 	{
 	case SDL_KEYDOWN:
 		if (e.key.keysym.sym == SDLK_a) {
-			m_moving_left = true;
+			movingLeft = true;
 		}
 		if (e.key.keysym.sym == SDLK_d) {
-			m_moving_right = true;
+			movingRight = true;
 		}
 		if (e.key.keysym.sym == SDLK_w) {
-			if (m_can_jump) { Jump(INITIAL_JUMP_FORCE); }
+			if (canJump) { Jump(INITIAL_JUMP_FORCE); }
 		}
 		break;
 	case SDL_KEYUP:
 		if (e.key.keysym.sym == SDLK_a) {
-			m_moving_left = false;
+			movingLeft = false;
 		}
 		if (e.key.keysym.sym == SDLK_d) {
-			m_moving_right = false;
+			movingRight = false;
 		}
 		break;
 	default:

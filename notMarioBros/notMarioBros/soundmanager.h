@@ -9,6 +9,7 @@ namespace SOUND {
 		PLAYER_JUMP,
 		PLAYER_DIE,
 		POW_BLOCK,
+		ENEMY_HURT,
 		ENEMY_DIE,
 		count
 	};
@@ -22,26 +23,34 @@ namespace MUSIC {
 	};
 }
 
+// Singleton class for keeping all sound and music assets in one place that can be referenced by the rest of the program
 class SoundManager
 {
 public:
 	~SoundManager();
+
+	// Return a pointer to the singleton object so that requests for a collision check can be made.
 	static SoundManager* Instance();
 
+	// Startup/shutdown
 	void LoadAssets();
 	void Shutdown();
 
+	// Play a sound effect once
 	void PlaySound(SOUND::ID id);
+
+	// Play a music track on loop
 	void PlayMusic(MUSIC::ID id);
 	void StopMusic();
 
 private:
-	SoundManager();
 
-	static SoundManager* m_instance;
+	static SoundManager* instance;
+
 	Mix_Chunk* sounds[SOUND::ID::count];
 	Mix_Music* music[MUSIC::ID::count];
 
+	// If the singleton object has already been initialized.
 	bool initialized = false;
 };
 

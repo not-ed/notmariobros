@@ -24,6 +24,7 @@ namespace FONT {
 		count
 	};
 
+	// Text-alignment
 	enum ALLIGNMENT {
 		LEFT,
 		CENTER,
@@ -32,13 +33,19 @@ namespace FONT {
 }
 
 namespace Text {
+	// Startup/shutdown
 	void Initialize(SDL_Renderer* renderer);
 	void Shutdown();
+
+	// Draw a specified string of text at a given position, font, and text allignment
 	void Draw(std::string text, IntVector2D position, FONT::ID font, FONT::ALLIGNMENT allignment);
 }
 
+// If the singleton object has already been initialized.
 static bool initialized;
+
 static SDL_Renderer* renderer;
+
 static Texture2D* fonts[FONT::ID::count];
 
 #endif

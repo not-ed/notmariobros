@@ -1,12 +1,8 @@
 #include "soundmanager.h"
 #include <iostream>
+
 //Initialize instance to nullptr
-SoundManager* SoundManager::m_instance = nullptr;
-
-SoundManager::SoundManager()
-{
-
-}
+SoundManager* SoundManager::instance = nullptr;
 
 void SoundManager::LoadAssets() {
 	if (!initialized) {
@@ -14,6 +10,7 @@ void SoundManager::LoadAssets() {
 		sounds[SOUND::ID::PLAYER_JUMP] = Mix_LoadWAV("Music/jump.wav");
 		sounds[SOUND::ID::PLAYER_DIE] = Mix_LoadWAV("Music/die.wav");
 		sounds[SOUND::ID::POW_BLOCK] = Mix_LoadWAV("Music/pow.wav");
+		sounds[SOUND::ID::ENEMY_HURT] = Mix_LoadWAV("Music/enemy_hurt.wav");
 		sounds[SOUND::ID::ENEMY_DIE] = Mix_LoadWAV("Music/enemy_die.wav");
 
 		//Music
@@ -33,6 +30,8 @@ SoundManager::~SoundManager()
 	sounds[SOUND::ID::PLAYER_DIE] = nullptr;
 	Mix_FreeChunk(sounds[SOUND::ID::POW_BLOCK]);
 	sounds[SOUND::ID::POW_BLOCK] = nullptr;
+	Mix_FreeChunk(sounds[SOUND::ID::ENEMY_HURT]);
+	sounds[SOUND::ID::ENEMY_HURT] = nullptr;
 	Mix_FreeChunk(sounds[SOUND::ID::ENEMY_DIE]);
 	sounds[SOUND::ID::ENEMY_DIE] = nullptr;
 
@@ -42,15 +41,15 @@ SoundManager::~SoundManager()
 	Mix_FreeMusic(music[MUSIC::ID::UNDERWORLD]);
 	music[MUSIC::ID::UNDERWORLD] = nullptr;
 
-	m_instance = nullptr;
+	instance = nullptr;
 }
 
 SoundManager* SoundManager::Instance() {
-	if (!m_instance) {
-		m_instance = new SoundManager();
+	if (!instance) {
+		instance = new SoundManager();
 	}
 
-	return m_instance;
+	return instance;
 }
 
 void SoundManager::PlaySound(SOUND::ID id) {
@@ -70,9 +69,9 @@ void SoundManager::StopMusic() {
 }
 
 void SoundManager::Shutdown() {
-	if (m_instance)
+	if (instance)
 	{
-		delete m_instance;
-		m_instance = nullptr;
+		delete instance;
+		instance = nullptr;
 	}
 }

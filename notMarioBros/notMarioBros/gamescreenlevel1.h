@@ -2,61 +2,71 @@
 #ifndef GAMESCREENLEVEL1_H
 #define GAMESCREENLEVEL1_H
 
+#include <iostream>
+#include <vector>
 #include "gamescreen.h"
+#include "soundmanager.h"
+#include "texturemanager.h"
+#include "timer.h"
+#include "levelmap.h"
+#include "collisions.h"
 #include "commons.h"
+#include "powblock.h"
 #include "character.h"
 #include "charactermario.h"
 #include "characterluigi.h"
 #include "koopa.h"
-#include "levelmap.h"
-#include <vector>
-#include "texturemanager.h"
-
-//Forward declarations
-class Texture2D;
-class Character;
-class PowBlock;
 
 class GameScreenLevel1 : GameScreen
 {
 public:
-	GameScreenLevel1(SDL_Renderer* renderer);
+	GameScreenLevel1(SDL_Renderer* game_renderer);
 	~GameScreenLevel1();
 
 	void Render() override;
-	void Update(float deltaTime, SDL_Event e) override;
+	void Update(float delta_time, SDL_Event e) override;
 
+	// Update the level's POW block if used by mario/luigi
 	void UpdatePOWBlock();
 
+	// Query if a character is going off screen horizontally, and 
 	void QueryLevelBounds(Character* chara);
 
 private:
-	Texture2D* m_background_texture;
+	Texture2D* backgroundTexture;
 
+	// Set up relevant level components (backgrounds, objects, enemies, players, etc)
 	bool SetUpLevel();
 
-	LevelMap* m_level_map;
+	// Data on tiles that make up a levels composition.
+	LevelMap* levelMap;
 	void SetLevelMap();
 
-	CharacterMario* mario_character;
-	CharacterLuigi* luigi_character;
+	CharacterMario* mario = nullptr;
+	CharacterLuigi* luigi = nullptr;
+	CharacterMario* players[2];
 
-	PowBlock* m_pow_block;
-
+	PowBlock* powBlock;
 
 	// Screen Shake
-	bool m_screenshake;
-	float m_shake_time;
-	float m_wobble;
-	float m_background_yPos;
-
+	Timer screenShakeTimer;
+	// How much the screen is shaking
+	float accumulatedWobble; 
+	// The y-position of the level background with screen-shake factored in.
+	float backgroundYPos;
 	void DoScreenShake();
-
-	void UpdateEnemies(float deltaTime, SDL_Event e);
+	
+	// Enemies
+	void UpdateEnemies(float delta_time, SDL_Event e);
 	void CreateKoopa(Vector2D position, FACING direction, float speed);
+	//TODO: Create Crab
+	//TODO: Create Icicle
 
 	vector<CharacterKoopa*> m_enemies;
+	//TODO: Crabs
+	//TODO: Icicles
 
+	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
 	float koopa_spawn_frequency = 9.0f;
 	float last_koopa_spawn;
 	FACING koopa_starting_direction;

@@ -10,22 +10,49 @@
 class CharacterMario : public Character
 {
 public:
-	CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2D start_position, LevelMap* map);
-	//~CharacterMario();
+	CharacterMario(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map);
 
-	void Update(float deltaTime, SDL_Event e);
+	void Update(float delta_time, SDL_Event e);
 	void Render();
+
+	// Has mario/luigi just respawned and on cooldown?
 	bool Invincible() { return !invincibilityTimer.IsExpired(); }
+
+	// Rendering which is called last by the game screen - intended for GUI purposes to guarantee whatever is drawn is shown at the front.
 	void RenderGUI();
+
+	// Get the hit box from mario/luigi's head - used for damaging enemies without the use of a POW block.
 	Rect2D GetHeadHitBox() { return headHitBox; }
 protected:
 	void OnKill();
+
+	// Return to spawnPoint after being killed.
 	void Respawn();
+	// How long to wait until trying to respawn after being killed.
 	Timer respawnTimer;
+	// How long until mario/luigi can be killed again after respawning.
 	Timer invincibilityTimer;
+
+	// Initial starting position, and where to return to upon respawning.
 	Vector2D spawnPoint;
+
 	int remainingLives = 3;
+	
+	// Used in collision detection for damaging enemies without the use of a POW block.
 	Rect2D headHitBox = Rect2D{ 0,0,0,0 };
+
+	// Relevant texture IDs for actions such as running, jumping, dying etc
+	TEXTURE::ID idleTexture = TEXTURE::ID::MARIO_IDLE;
+	TEXTURE::ID runTexture = TEXTURE::ID::MARIO_RUN;
+	TEXTURE::ID jumpTexture = TEXTURE::ID::MARIO_JUMP;
+	TEXTURE::ID dieTexture = TEXTURE::ID::MARIO_DIE;
+
+	// Font, allignment, and position to use for drawing remaining lives as text in RenderGUI.
+	FONT::ID hudFont = FONT::ID::MARIO;
+	FONT::ALLIGNMENT hudFontAllignment = FONT::ALLIGNMENT::LEFT;
+	IntVector2D hudTextPosition = IntVector2D(8, SCREEN_HEIGHT - 24);
+	// Text/name to display before the remaining life count on the HUD.
+	std::string hudNamePrefix = "MARIO: ";
 };
 
 #endif
