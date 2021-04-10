@@ -37,14 +37,12 @@ GameScreenLevel1::~GameScreenLevel1()
 
 void GameScreenLevel1::Render() {
 
-	
-
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
 		m_enemies[i]->Render();
 	}
 
-	m_background_texture->Render(Vector2D(0, m_background_yPos), SDL_FLIP_NONE);
+	
 
 	//Render characters
 	mario_character->Render();
@@ -52,7 +50,9 @@ void GameScreenLevel1::Render() {
 
 	m_pow_block->Render();
 
+	m_background_texture->Render(Vector2D(0, m_background_yPos), SDL_FLIP_NONE);
 	
+	mario_character->RenderGUI();
 }
 
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {
@@ -95,6 +95,8 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e) {
 	UpdatePOWBlock();
 
 	UpdateEnemies(deltaTime, e);
+
+	
 }
 
 bool GameScreenLevel1::SetUpLevel() {
@@ -191,15 +193,24 @@ void GameScreenLevel1::UpdateEnemies(float deltaTime, SDL_Event e) {
 			{
 				// Ignore collisions; behind level pipe.
 			}
-			else {
-				if (Collisions::Instance()->Box(m_enemies[i]->GetCollisionBox(),mario_character->GetCollisionBox())) {
+			else if (mario_character->GetAlive()) {
+				if (mario_character->IsJumping()) {
+					if ((!m_enemies[i]->GetInjured())&&(Collisions::Instance()->Box(m_enemies[i]->GetCollisionBox(),mario_character->GetHeadHitBox())))
+					{
+						m_enemies[i]->TakeDamage();
+						mario_character->CancelJump();
+					}
+				}
+				else if(Collisions::Instance()->Box(m_enemies[i]->GetCollisionBox(),mario_character->GetCollisionBox())) {
 					if (m_enemies[i]->GetInjured()) {
 						if (m_enemies[i]->GetAlive()) {
 							m_enemies[i]->SetAlive(false);
 						}
 					}
 					else {
-						mario_character->SetAlive(false);
+						if (!mario_character->Invincible()) {
+							mario_character->SetAlive(false);
+						}
 					}
 				}
 			}
@@ -227,14 +238,38 @@ void GameScreenLevel1::QueryLevelBounds(Character* chara) {
 	Vector2D char_pos = chara->GetPosition();
 	Rect2D char_col = chara->GetCollisionBox();
 
+	bool flipped = false;
+
 	if ((char_pos.x) > SCREEN_WIDTH) //off bounds on the right side
 	{
 		char_pos.x = -(char_col.width) + 1;
+		flipped = true;
 	}
 	else if ((char_pos.x + char_col.width) < 0){ //off bounds on the left side
 		char_pos.x = SCREEN_WIDTH - 1;
+		flipped = true;
 	}
 
-	chara->SetPosition(char_pos);
+	if (flipped && (int)chara->GetPosition().y == 348 ) // go to 32
+	{
+		// Pipe axis flip
+	}
 
+	if (flipped)
+	{
+		// Behind pipe(s)
+		if ((chara->GetPosition().y > 300.0f || chara->GetPosition().y <= 64.0f) || (chara->GetPosition().x < 64.0f || chara->GetPosition().x > SCREEN_WIDTH - 96.0f)){
+			if (chara->GetPosition().y > 300.0f) // upper area
+			{
+				char_pos.y -= (321.0f);
+				chara->TriggerPipeFlag();
+			}
+			else if (chara->GetPosition().y <= 64.0f){ // lower area
+				char_pos.y += (321.0f);
+				chara->TriggerPipeFlag();
+			}
+		}
+	}
+	
+	chara->SetPosition(char_pos);
 }

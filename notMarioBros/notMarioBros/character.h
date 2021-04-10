@@ -37,10 +37,15 @@ public:
 	void Debug_RenderHitbox();
 
 	bool InLevelBounds();
+
+	void TriggerPipeFlag() { pipeTravelFlag = true; }
 private:
 	bool m_alive;
 	LevelMap* m_current_level_map;
 protected:
+	// The character has flipped across the level through the pipe at least once.
+	bool pipeTravelFlag = false;
+
 	FACING m_facing_direction;
 
 	SDL_Renderer* m_renderer;

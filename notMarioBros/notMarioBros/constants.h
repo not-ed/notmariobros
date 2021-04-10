@@ -26,5 +26,11 @@
 #define KILL_JUMP_FORCE 400.0f
 
 #define KOOPA_SPEED 64.0f
+#define KOOPA_ANGRY_SPEED 128.0f
+
+#define CRAB_SPEED 48.0f
+#define CRAB_ANGRY_SPEED 72.0f
+
+#define ICICLE_SPEED 96.0f
 
 #endif

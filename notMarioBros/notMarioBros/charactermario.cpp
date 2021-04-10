@@ -7,10 +7,14 @@ CharacterMario::CharacterMario(SDL_Renderer* renderer, string imagePath, Vector2
 	spawnPoint = start_position;
 
 	respawnTimer.SetTime(4.0f, false);
+	invincibilityTimer.SetTime(3.5f, false);
 }
 
 void CharacterMario::Update(float deltaTime, SDL_Event e) {
 	respawnTimer.Update(deltaTime);
+	invincibilityTimer.Update(deltaTime);
+
+	std::cout << IsJumping() << std::endl;
 
 	if (GetAlive())
 	{
@@ -63,14 +67,15 @@ void CharacterMario::Update(float deltaTime, SDL_Event e) {
 
 	Character::Update(deltaTime, e);
 	anim.Update(deltaTime);
+
+	//Update head hit box
+	headHitBox = Rect2D{ m_position.x,m_position.y - 2,GetCollisionBox().width,4 };
 }
 
 void CharacterMario::Render() {
-	anim.Render(m_position,0.0);
-	Debug_RenderHitbox();
-	std::string life_count = " x";
-	life_count.append(to_string(remainingLives));
-	Text::Draw(life_count, IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
+	if (!Invincible() || (Invincible() && (int)(invincibilityTimer.RemainingTime() / .10) % 2 == 0)) {
+		anim.Render(m_position, 0.0);
+	}
 }
 
 void CharacterMario::OnKill() {
@@ -88,9 +93,22 @@ void CharacterMario::Respawn() {
 	{
 		SetAlive(true);
 		m_position = spawnPoint;
+		invincibilityTimer.Reset();
 	}
 	else {
 		//TODO: Game over stuff
 	}
 	
+}
+
+void CharacterMario::RenderGUI() {
+	Debug_RenderHitbox();
+	std::string life_count = " x";
+	life_count.append(to_string(remainingLives));
+	Text::Draw(life_count, IntVector2D(8, SCREEN_HEIGHT - 24), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
+
+	SDL_Rect boxt = SDL_Rect{ (int)m_position.x,(int)m_position.y - 2,(int)GetCollisionBox().width,4 };
+	SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 255);
+	SDL_RenderDrawRect(m_renderer, &boxt);
+	SDL_SetRenderDrawColor(m_renderer,255,255,255,255);
 }

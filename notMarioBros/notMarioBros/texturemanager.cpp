@@ -32,7 +32,7 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 
 		textures[TEXTURE::ID::MARIO_DIE] = new Texture2D(renderer);
 		textures[TEXTURE::ID::MARIO_DIE]->LoadFromFile("Images/mario_die.png");
-		frameCount[TEXTURE::ID::MARIO_DIE] = 1;
+		frameCount[TEXTURE::ID::MARIO_DIE] = 2;
 
 		textures[TEXTURE::ID::LUIGI_IDLE] = new Texture2D(renderer);
 		textures[TEXTURE::ID::LUIGI_IDLE]->LoadFromFile("Images/Luigi.png");
@@ -49,7 +49,7 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 
 		textures[TEXTURE::ID::LUIGI_DIE] = new Texture2D(renderer);
 		textures[TEXTURE::ID::LUIGI_DIE]->LoadFromFile("Images/luigi_die.png");
-		frameCount[TEXTURE::ID::LUIGI_DIE] = 1;
+		frameCount[TEXTURE::ID::LUIGI_DIE] = 2;
 
 		textures[TEXTURE::ID::KOOPA] = new Texture2D(renderer);
 		textures[TEXTURE::ID::KOOPA]->LoadFromFile("Images/Koopa.png");
@@ -58,6 +58,22 @@ void TextureManager::LoadAssets(SDL_Renderer* renderer) {
 		textures[TEXTURE::ID::KOOPA_STUN] = new Texture2D(renderer);
 		textures[TEXTURE::ID::KOOPA_STUN]->LoadFromFile("Images/koopa_stun.png");
 		frameCount[TEXTURE::ID::KOOPA_STUN] = 2;
+
+		textures[TEXTURE::ID::KOOPA_DIE] = new Texture2D(renderer);
+		textures[TEXTURE::ID::KOOPA_DIE]->LoadFromFile("Images/koopa_die.png");
+		frameCount[TEXTURE::ID::KOOPA_DIE] = 1;
+
+		textures[TEXTURE::ID::KOOPA_ANGRY] = new Texture2D(renderer);
+		textures[TEXTURE::ID::KOOPA_ANGRY]->LoadFromFile("Images/koopa_angry.png");
+		frameCount[TEXTURE::ID::KOOPA_ANGRY] = 3;
+
+		textures[TEXTURE::ID::KOOPA_ANGRY_STUN] = new Texture2D(renderer);
+		textures[TEXTURE::ID::KOOPA_ANGRY_STUN]->LoadFromFile("Images/koopa_angry_stun.png");
+		frameCount[TEXTURE::ID::KOOPA_ANGRY_STUN] = 2;
+
+		textures[TEXTURE::ID::KOOPA_ANGRY_DIE] = new Texture2D(renderer);
+		textures[TEXTURE::ID::KOOPA_ANGRY_DIE]->LoadFromFile("Images/koopa_angry_die.png");
+		frameCount[TEXTURE::ID::KOOPA_ANGRY_DIE] = 1;
 
 		textures[TEXTURE::ID::CRAB] = new Texture2D(renderer);
 		textures[TEXTURE::ID::CRAB]->LoadFromFile("Images/crab.png");
@@ -87,6 +103,10 @@ TextureManager::~TextureManager()
 	textures[TEXTURE::ID::LUIGI_DIE]->Free();
 	textures[TEXTURE::ID::KOOPA]->Free();
 	textures[TEXTURE::ID::KOOPA_STUN]->Free();
+	textures[TEXTURE::ID::KOOPA_DIE]->Free();
+	textures[TEXTURE::ID::KOOPA_ANGRY]->Free();
+	textures[TEXTURE::ID::KOOPA_ANGRY_STUN]->Free();
+	textures[TEXTURE::ID::KOOPA_ANGRY_DIE]->Free();
 	textures[TEXTURE::ID::CRAB]->Free();
 	textures[TEXTURE::ID::CRAB_STUN]->Free();
 
@@ -104,6 +124,10 @@ TextureManager::~TextureManager()
 	delete textures[TEXTURE::ID::LUIGI_DIE];
 	delete textures[TEXTURE::ID::KOOPA];
 	delete textures[TEXTURE::ID::KOOPA_STUN];
+	delete textures[TEXTURE::ID::KOOPA_DIE];
+	delete textures[TEXTURE::ID::KOOPA_ANGRY];
+	delete textures[TEXTURE::ID::KOOPA_ANGRY_STUN];
+	delete textures[TEXTURE::ID::KOOPA_ANGRY_DIE];
 	delete textures[TEXTURE::ID::CRAB];
 	delete textures[TEXTURE::ID::CRAB_STUN];
 

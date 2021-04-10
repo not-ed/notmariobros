@@ -63,6 +63,7 @@ void Character::Update(float deltaTime, SDL_Event e) {
 	}
 	else {
 		m_can_jump = true;
+		
 	}
 
 	if (m_moving_left)
@@ -135,7 +136,7 @@ void Character::OnKill() {
 }
 
 void Character::Debug_RenderHitbox() {
-	Rect2D r = GetCollisionBox();
+	/*Rect2D r = GetCollisionBox();
 	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);
 	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ (int)r.x,(int)r.y,(int)r.width,(int)r.height });
 
@@ -145,7 +146,7 @@ void Character::Debug_RenderHitbox() {
 	
 	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
 
-	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);*/
 }
 
 bool Character::InLevelBounds() {
