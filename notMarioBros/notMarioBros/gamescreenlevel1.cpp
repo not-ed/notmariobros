@@ -30,12 +30,21 @@ GameScreenLevel1::~GameScreenLevel1()
 		delete m_enemies[i];
 	}
 
+	for (int i = 0; i < coins.size(); i++)
+	{
+		delete coins[i];
+	}
+	
 	m_enemies.clear();
+	coins.clear();
 }
 
 void GameScreenLevel1::Render() {
 	// Pointers to characters that are dead, so that they can be drawn last to appear at the end of the render loop.
 	std::vector<Character*> dead_characters;
+
+	//TODO: REMOVE THIS, temporary
+	/*test->Render();*/
 
 	// Render all enemies
 	for (int i = 0; i < m_enemies.size(); i++)
@@ -49,6 +58,13 @@ void GameScreenLevel1::Render() {
 		}
 	}
 
+	// Render Coins
+	for (int i = 0; i < coins.size(); i++)
+	{
+		coins[i]->Render();
+	}
+
+
 	//Render mario/luigi
 	if (mario->IsAlive())
 	{
@@ -58,6 +74,8 @@ void GameScreenLevel1::Render() {
 		dead_characters.push_back(mario);
 	}
 	
+	
+
 	// If game is actually being played 2P
 	if (luigi != nullptr)
 	{
@@ -92,6 +110,9 @@ void GameScreenLevel1::Render() {
 
 void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 	screenShakeTimer.Update(delta_time);
+
+	//TODO: REMOVE THIS, temporary
+	/*test->Update(delta_time, e);*/
 
 	// Screen shake (if applicable)
 	if (!screenShakeTimer.IsExpired()) {
@@ -132,6 +153,33 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 	UpdatePOWBlock();
 
 	UpdateEnemies(delta_time, e);
+
+	for (int i = 0; i < coins.size(); i++)
+	{
+		coins[i]->Update(delta_time, e);
+		if (coins[i]->Expired())
+		{
+			delete coins[i];
+			coins.erase(coins.begin() + i);
+		}
+		else {
+			for (int j = 0; j < 2; j++)
+			{
+				if (players[j] != nullptr)
+				{
+					// If a player has collided with a coin
+					if (Collisions::Instance()->Box(coins[i]->GetCollisionBox(),players[j]->GetCollisionBox()))
+					{
+						delete coins[i];
+						coins.erase(coins.begin() + i);
+						SoundManager::Instance()->PlaySound(SOUND::ID::COIN);
+						// TODO: give coin pickup score
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 bool GameScreenLevel1::SetUpLevel() {
@@ -164,10 +212,19 @@ bool GameScreenLevel1::SetUpLevel() {
 	// Create Koopas
 	// TODO: remove this later as levels move to manifesting
 	CreateKoopa(Vector2D(150,32),FACING_RIGHT,KOOPA_SPEED);
-	CreateKoopa(Vector2D(325, 32), FACING_LEFT, KOOPA_SPEED);
+	//CreateKoopa(Vector2D(325, 32), FACING_LEFT, KOOPA_SPEED);
+	CreateIcicle(Vector2D(325, 32), FACING_LEFT, KOOPA_SPEED);
 
 	// Start playing level music
 	SoundManager::Instance()->PlayMusic(MUSIC::ID::MARIO);
+
+
+	//TODO: remove this, temporary
+	/*for (int i = 0; i < 5; i++)
+	{
+		coins.push_back(new Coin(renderer, Vector2D(150 + (i*16), 100), levelMap));
+	}*/
+	
 
 	return true;
 }
@@ -229,11 +286,16 @@ void GameScreenLevel1::DoScreenShake() {
 	for (int i = 0; i < m_enemies.size(); i++)
 	{
 		m_enemies[i]->TakeDamage();
+
+		//TODO: This also is the code from the enemy update loop, this voilates the DRY Principle
+		// If the enemy is specifically an Icicle, then we can cast to it as that and ask it to drop some coins
+		QueryEnemyTypeBehaviour(m_enemies[i]);
 	}
 }
 
 void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 	// If there is no enemies to start with, none of this needs to be done
+
 	if (!m_enemies.empty()) {
 		
 
@@ -269,6 +331,8 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 								SoundManager::Instance()->PlaySound(SOUND::ID::ENEMY_HURT);
 
 								players[j]->CancelJump();
+
+								QueryEnemyTypeBehaviour(m_enemies[i]);
 							}
 						}
 						/*else*/ if (Collisions::Instance()->Box(m_enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) { // Player has collided with an enemy while on the ground
@@ -276,9 +340,8 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 							if (m_enemies[i]->GetInjured()) {
 
 								if (m_enemies[i]->IsAlive()) {
-
+									//Kill the enemy
 									m_enemies[i]->SetAlive(false);
-
 								}
 							}
 							else { // The enemy is not stunned
@@ -309,11 +372,28 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 			m_enemies.erase(m_enemies.begin() + enemyIndexToDelete);
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 void GameScreenLevel1::CreateKoopa(Vector2D position, FACING direction, float speed) {
 	CharacterKoopa* koopa = new CharacterKoopa(renderer,position, levelMap,direction,speed);
 	m_enemies.push_back(koopa);
+}
+
+void GameScreenLevel1::CreateIcicle(Vector2D position, FACING direction, float speed) {
+	CharacterIcicle* icicle = new CharacterIcicle(renderer, position, levelMap, direction, speed);
+	m_enemies.push_back(icicle);
 }
 
 void GameScreenLevel1::QueryLevelBounds(Character* chara) {
@@ -353,4 +433,17 @@ void GameScreenLevel1::QueryLevelBounds(Character* chara) {
 	}
 	
 	chara->SetPosition(char_pos);
+}
+
+void GameScreenLevel1::QueryEnemyTypeBehaviour(CharacterKoopa* enemy) {
+	// Injured enemy is an Incicle
+	if (enemy->GetEnemyType() == ENEMY_TYPE::ICICLE)
+	{
+		// Icicles are killed instantly upon being injured, but drop multiple coins before doing so, which needs to be tracked by the game screen.
+		CharacterIcicle* icicle = (CharacterIcicle*)enemy;
+		for (int i = 0; i < icicle->GetCoinDropAmount(); i++)
+		{
+			coins.push_back(icicle->DropCoin());
+		}
+	}
 }

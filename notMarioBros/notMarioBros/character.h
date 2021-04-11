@@ -44,7 +44,6 @@ public:
 	void TriggerPipeFlag() { pipeTravelFlag = true; }
 private:
 	bool alive;
-	LevelMap* currentLevelMap;
 protected:
 	// The character has been through a pipe at least once.
 	bool pipeTravelFlag = false;
@@ -78,6 +77,7 @@ protected:
 
 	Animator anim = Animator(TEXTURE::ID::NONE,0.0f);
 
+	LevelMap* currentLevelMap;
 };
 
 #endif

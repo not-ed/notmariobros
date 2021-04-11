@@ -98,7 +98,6 @@ void Character::Jump(float force) {
 		jumpForce = force;
 		jumping = true;
 		canJump = false;
-		SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);
 	}
 }
 

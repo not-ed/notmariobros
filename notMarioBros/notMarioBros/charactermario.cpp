@@ -30,7 +30,7 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 				anim.SetFlip(SDL_FLIP_NONE);
 			}
 			if (e.key.keysym.sym == SDLK_UP) {
-				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); }
+				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);}
 			}
 			break;
 		case SDL_KEYUP:

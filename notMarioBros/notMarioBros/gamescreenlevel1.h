@@ -12,10 +12,12 @@
 #include "collisions.h"
 #include "commons.h"
 #include "powblock.h"
+#include "coin.h"
 #include "character.h"
 #include "charactermario.h"
 #include "characterluigi.h"
 #include "koopa.h"
+#include "icicle.h"
 
 class GameScreenLevel1 : GameScreen
 {
@@ -60,16 +62,23 @@ private:
 	void UpdateEnemies(float delta_time, SDL_Event e);
 	void CreateKoopa(Vector2D position, FACING direction, float speed);
 	//TODO: Create Crab
-	//TODO: Create Icicle
+	void CreateIcicle(Vector2D position, FACING direction, float speed);
+
+	// Query an enemy who has been injured for its true derived type (if not a koopa) and apply type specific behaviours if needed
+	void QueryEnemyTypeBehaviour(CharacterKoopa* enemy);
 
 	vector<CharacterKoopa*> m_enemies;
 	//TODO: Crabs
 	//TODO: Icicles
+	vector<Coin*> coins;
 
 	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
 	float koopa_spawn_frequency = 9.0f;
 	float last_koopa_spawn;
 	FACING koopa_starting_direction;
+
+
+	//Coin* test;
 };
 
 #endif

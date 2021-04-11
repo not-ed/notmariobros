@@ -11,6 +11,7 @@ namespace SOUND {
 		POW_BLOCK,
 		ENEMY_HURT,
 		ENEMY_DIE,
+		COIN,
 		count
 	};
 }

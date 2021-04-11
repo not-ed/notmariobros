@@ -32,6 +32,10 @@
 // How high a enemy jumps into the air when killed
 #define KILL_JUMP_FORCE 400.0f
 
+// Coin Jump/bounce forces
+#define COIN_INITIAL_JUMP_FORCE 275.0f
+#define COIN_BOUNCE_FORCE 250.0f
+
 // Koopa movement speeds
 #define KOOPA_SPEED 64.0f
 #define KOOPA_ANGRY_SPEED 128.0f
@@ -41,6 +45,6 @@
 #define CRAB_ANGRY_SPEED 72.0f
 
 // Icicle movement speeds
-#define ICICLE_SPEED 96.0f
+#define ICICLE_SPEED 200.0f
 
 #endif

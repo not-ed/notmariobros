@@ -12,6 +12,7 @@ void SoundManager::LoadAssets() {
 		sounds[SOUND::ID::POW_BLOCK] = Mix_LoadWAV("Music/pow.wav");
 		sounds[SOUND::ID::ENEMY_HURT] = Mix_LoadWAV("Music/enemy_hurt.wav");
 		sounds[SOUND::ID::ENEMY_DIE] = Mix_LoadWAV("Music/enemy_die.wav");
+		sounds[SOUND::ID::COIN] = Mix_LoadWAV("Music/coin_pickup.wav");
 
 		//Music
 		music[MUSIC::ID::MARIO] = Mix_LoadMUS("Music/Mario.mp3");
@@ -34,6 +35,8 @@ SoundManager::~SoundManager()
 	sounds[SOUND::ID::ENEMY_HURT] = nullptr;
 	Mix_FreeChunk(sounds[SOUND::ID::ENEMY_DIE]);
 	sounds[SOUND::ID::ENEMY_DIE] = nullptr;
+	Mix_FreeChunk(sounds[SOUND::ID::COIN]);
+	sounds[SOUND::ID::COIN] = nullptr;
 
 	//Music
 	Mix_FreeMusic(music[MUSIC::ID::MARIO]);

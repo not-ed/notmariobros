@@ -145,11 +145,13 @@
     <ClCompile Include="character.cpp" />
     <ClCompile Include="characterluigi.cpp" />
     <ClCompile Include="charactermario.cpp" />
+    <ClCompile Include="coin.cpp" />
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="gamescreen.cpp" />
     <ClCompile Include="gamescreenlevel1.cpp" />
     <ClCompile Include="gamescreenmanager.cpp" />
     <ClCompile Include="gamescreentitle.cpp" />
+    <ClCompile Include="icicle.cpp" />
     <ClCompile Include="koopa.cpp" />
     <ClCompile Include="levelmap.cpp" />
     <ClCompile Include="main.cpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="character.h" />
     <ClInclude Include="characterluigi.h" />
     <ClInclude Include="charactermario.h" />
+    <ClInclude Include="coin.h" />
     <ClInclude Include="collisions.h" />
     <ClInclude Include="commons.h" />
     <ClInclude Include="constants.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="gamescreenlevel1.h" />
     <ClInclude Include="gamescreenmanager.h" />
     <ClInclude Include="gamescreentitle.h" />
+    <ClInclude Include="icicle.h" />
     <ClInclude Include="koopa.h" />
     <ClInclude Include="levelmap.h" />
     <ClInclude Include="powblock.h" />

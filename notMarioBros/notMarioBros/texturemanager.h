@@ -10,6 +10,7 @@ namespace TEXTURE {
 		NONE,
 		LOGO,
 		POW_BLOCK,
+		COIN,
 		FIREBALL,
 		MARIO_IDLE,
 		MARIO_RUN,
@@ -27,6 +28,7 @@ namespace TEXTURE {
 		KOOPA_ANGRY_DIE,
 		CRAB,
 		CRAB_STUN,
+		ICICLE,
 		count
 	};
 }
