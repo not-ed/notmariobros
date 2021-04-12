@@ -2,6 +2,10 @@
 #ifndef SCORE_H
 #define SCORE_H
 
+#include "SDL.h"
+#include "constants.h"
+#include "commons.h"
+#include "textrenderer.h"
 #include <string>
 #include <fstream>
 
@@ -52,6 +56,43 @@ struct ScoreCounter {
 	}
 };
 
+// A pop up window that allows the player to enter a 3-character name which can be fetched from the object to be used for submitting high score entries.
+class ScoreNameEntryWindow
+{
+public:
+
+	void Update(float delta_time, SDL_Event e);
+	void Render();
+	
+	void Display() { displayed = true; }
+	bool IsDisplayed() { return displayed; }
+
+	// Return the name submitted in the window
+	std::string GetEnteredName() { return enteredName; }
+
+	void SetRenderer(SDL_Renderer* game_renderer) { renderer = game_renderer; }
+
+private:
+	// Is the window currently being shown?
+	bool displayed = false;
+
+	// Range of ASCII character values that can be selected for entering a name
+	const IntVector2D CHARACTER_RANGE = IntVector2D(33, 126);
+	int startingCharacterValue = 65; // 'A' 'A' 'A'
+
+	char enteredName[3] = { (char)startingCharacterValue, (char)startingCharacterValue, (char)startingCharacterValue };
+	// Current letter being edited
+	int selectedLetter = 0;
+
+	SDL_Renderer* renderer = nullptr;
+
+	void IncrementLetterCharacter(int amount);
+	void SwitchLetter(int increment);
+
+	void Close() { displayed = false; }
+};
+
+
 namespace HighScore {
 
 	// Potentially destructive functions, such as erasing file data are held in an Anonymous namespace.
@@ -69,6 +110,9 @@ namespace HighScore {
 
 	// Submit a score to the table, and then write changes to the disk.
 	void SubmitScoreEntry(const char name[3], int score);
+
+	// Check if a given score is eligible for addition to the high score table.
+	bool NewScoreAchieved(int score);
 }
 
 #endif

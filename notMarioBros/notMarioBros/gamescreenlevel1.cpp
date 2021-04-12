@@ -7,6 +7,9 @@ GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* sc
 	last_koopa_spawn = koopa_spawn_frequency;
 	koopa_starting_direction = FACING_LEFT;
 	//
+
+	scoreNameWindow.SetRenderer(game_renderer);
+
 	SetUpLevel();
 }
 
@@ -124,55 +127,90 @@ void GameScreenLevel1::Render() {
 	// Draw remaining enemy counters
 	Text::Draw(to_string(enemies.size()), IntVector2D(32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 	Text::Draw(to_string(enemies.size()), IntVector2D(SCREEN_WIDTH - 32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
+
+	// Display the high score name entry window if it is being used.
+	if (scoreNameWindow.IsDisplayed())
+	{
+		scoreNameWindow.Render();
+	}
+
 }
 
 void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
-	screenShakeTimer.Update(delta_time);
+	if (scoreNameWindow.IsDisplayed())
+	{
+		scoreNameWindow.Update(delta_time, e);
 
-
-	// Screen shake (if applicable)
-	if (!screenShakeTimer.IsExpired()) {
-		accumulatedWobble++;
-		backgroundYPos = sin(accumulatedWobble);
-		backgroundYPos *= 8.0;
+		//TODO: Add checking once it is closed
+		// Window has been closed by the player, meaning they've submitted a name.
+		if (!scoreNameWindow.IsDisplayed())
+		{
+			HighScore::SubmitScoreEntry(scoreNameWindow.GetEnteredName().c_str(), scoreCounter->GetCurrentScore());
+		}
 	}
 	else {
-		backgroundYPos = 0.0f;
-	}
-	
-	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
-	last_koopa_spawn -= delta_time;
-	if (last_koopa_spawn <= 0.0f) {
 
-		last_koopa_spawn = koopa_spawn_frequency;
-
-		if (koopa_starting_direction == FACING_LEFT) {
-			CreateKoopa(Vector2D(SCREEN_WIDTH-32, 32), FACING_LEFT);
-			koopa_starting_direction = FACING_RIGHT;
+		//TODO: this is just to test invocation of the high score menu, get rid of it later.
+		switch (e.type)
+		{
+		case SDL_KEYDOWN:
+			if (e.key.keysym.sym == SDLK_t) {
+				// If a new score has been achieved, get a name from the player and submit it.
+				if (HighScore::NewScoreAchieved(scoreCounter->GetCurrentScore()))
+				{
+					scoreNameWindow.Display();
+				}
+			}
+			break;
 		}
-		else { 
-			CreateKoopa(Vector2D(0, 32), FACING_RIGHT);
-			koopa_starting_direction = FACING_LEFT;
+
+		screenShakeTimer.Update(delta_time);
+
+
+		// Screen shake (if applicable)
+		if (!screenShakeTimer.IsExpired()) {
+			accumulatedWobble++;
+			backgroundYPos = sin(accumulatedWobble);
+			backgroundYPos *= 8.0;
 		}
-		
+		else {
+			backgroundYPos = 0.0f;
+		}
+
+		// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
+		last_koopa_spawn -= delta_time;
+		if (last_koopa_spawn <= 0.0f) {
+
+			last_koopa_spawn = koopa_spawn_frequency;
+
+			if (koopa_starting_direction == FACING_LEFT) {
+				CreateKoopa(Vector2D(SCREEN_WIDTH - 32, 32), FACING_LEFT);
+				koopa_starting_direction = FACING_RIGHT;
+			}
+			else {
+				CreateKoopa(Vector2D(0, 32), FACING_RIGHT);
+				koopa_starting_direction = FACING_LEFT;
+			}
+
+		}
+		//////////////////////////////
+
+		//Update mario/luigi
+		mario->Update(delta_time, e);
+		QueryLevelBounds(mario);
+		if (luigi != nullptr) {
+			luigi->Update(delta_time, e);
+			QueryLevelBounds(luigi);
+		}
+
+		UpdatePOWBlock();
+
+		UpdateEnemies(delta_time, e);
+
+		UpdateCoins(delta_time, e);
+
+		UpdateFireBalls(delta_time, e);
 	}
-	//////////////////////////////
-
-	//Update mario/luigi
-	mario->Update(delta_time, e);
-	QueryLevelBounds(mario);
-	if (luigi != nullptr) {
-		luigi->Update(delta_time, e);
-		QueryLevelBounds(luigi);
-	}
-
-	UpdatePOWBlock();
-
-	UpdateEnemies(delta_time, e);
-
-	UpdateCoins(delta_time,e);
-
-	UpdateFireBalls(delta_time, e);
 }
 
 bool GameScreenLevel1::SetUpLevel() {

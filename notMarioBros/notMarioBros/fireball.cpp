@@ -13,10 +13,6 @@ FireBall::FireBall(SDL_Renderer* renderer, Vector2D start_position, LevelMap* ma
 	Jump(160.0f);
 }
 
-FireBall::~FireBall() {
-	std::cout << "Fireball gone" << std::endl;
-}
-
 void FireBall::Update(float delta_time, SDL_Event e) {
 	anim.Update(delta_time);
 	// Fireballs need to ignore collision, so AddGravity will not be called despite the option being there.

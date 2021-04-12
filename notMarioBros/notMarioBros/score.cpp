@@ -105,4 +105,105 @@ namespace HighScore {
 		// Write the changes to the highscore file.
 		WriteScoreFileData(latest_data);
 	}
+
+	bool NewScoreAchieved(int score) {
+		// Pull the latest table values based on what is held on-disk
+		HighScoreData latest_data = GetLatestHighscore();
+		// Push all scores after the new score position downwards.
+		for (int i = 0; i < SCORE_TABLE_SIZE; i++)
+		{
+			if (score >= latest_data.GetScore(i))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+
+
+
+
+void ScoreNameEntryWindow::Update(float delta_time, SDL_Event e) {
+	switch (e.type)
+	{
+	case SDL_KEYDOWN:
+		if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a) {
+			SwitchLetter(-1); // Cycle to name character on left
+		}
+		if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d) {
+			SwitchLetter(1); // Cycle to name character on right
+		}
+		if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w) {
+			IncrementLetterCharacter(-1); // Cycle selected character down
+		}
+		if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
+			IncrementLetterCharacter(1); // Cycle selected character up
+		}
+		if (e.key.keysym.sym == SDLK_z) { // Submit name
+			Close();
+		}
+		break;
+	}
+}
+
+void ScoreNameEntryWindow::Render() {
+	if (renderer != nullptr)
+	{
+		// Set to black
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_Rect r = { 0, 136, SCREEN_WIDTH, 126 };
+		SDL_RenderFillRect(renderer, &r);
+		// Set to white
+		SDL_SetRenderDrawColor(renderer, 255,255,255, 255);
+
+		Text::Draw("NEW HIGH SCORE!", IntVector2D(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 64), FONT::ID::GOLD, FONT::ALLIGNMENT::CENTER);
+		Text::Draw("Enter Your Name:", IntVector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT/2-32), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
+
+		// Draw individual name characters
+		for (int i = 0; i < 3; i++)
+		{
+			if (i == selectedLetter)
+			{
+				Text::Draw(std::string{ enteredName[i] }, IntVector2D(SCREEN_WIDTH/2+(32*(-1 + i)), SCREEN_HEIGHT/2), FONT::ID::GOLD, FONT::ALLIGNMENT::CENTER);
+			}
+			else {
+				Text::Draw(std::string{ enteredName[i] }, IntVector2D(SCREEN_WIDTH/2+(32*(-1+i)), SCREEN_HEIGHT / 2), FONT::ID::SILVER, FONT::ALLIGNMENT::CENTER);
+			}
+		}
+
+		Text::Draw("Arrows/WASD: Select", IntVector2D(16, (SCREEN_HEIGHT / 2) + 32), FONT::ID::REGULAR, FONT::ALLIGNMENT::LEFT);
+		Text::Draw("Submit: Z", IntVector2D(SCREEN_WIDTH-16, (SCREEN_HEIGHT / 2) + 32), FONT::ID::REGULAR, FONT::ALLIGNMENT::RIGHT);
+	}
+}
+
+void ScoreNameEntryWindow::IncrementLetterCharacter(int amount) {
+	//Increment the selected character's ASCII value by the given amount
+	int new_letter_code = (int)enteredName[selectedLetter];
+	new_letter_code += amount;
+
+	// Loop letters back around if character value is out of range
+	if (new_letter_code > CHARACTER_RANGE.y) 
+	{
+		new_letter_code = CHARACTER_RANGE.x;
+	}
+	else if (new_letter_code < CHARACTER_RANGE.x) {
+		new_letter_code = CHARACTER_RANGE.y;
+	}
+
+	enteredName[selectedLetter] = (char)new_letter_code;
+}
+
+void ScoreNameEntryWindow::SwitchLetter(int increment) {
+	selectedLetter = (selectedLetter + increment);
+
+	// Clamp between 0 and 2
+	if (selectedLetter > 2) {
+		selectedLetter = 0;
+	}
+	if (selectedLetter < 0)
+	{
+		selectedLetter = 2;
+	}
 }

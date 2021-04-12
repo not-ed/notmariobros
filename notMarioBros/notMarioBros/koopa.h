@@ -19,7 +19,6 @@ class CharacterKoopa : public Character
 {
 public:
 	CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing);
-	~CharacterKoopa();
 	void Render();
 	void Update(float delta_time, SDL_Event e);
 

@@ -1,7 +1,6 @@
 #include "koopa.h"
 
 CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing) : Character(renderer, start_position, map) {
-	std::cout << "KOOPA" << std::endl;
 	facingDirection = start_facing;
 	position = start_position;
 	injured = false;
@@ -10,10 +9,6 @@ CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, 
 	anim.SetAnimationSpeed(0.1f);
 
 	injuryTimer.SetTime(INJURED_TIME, false);
-}
-
-CharacterKoopa::~CharacterKoopa(){
-	std::cout << "deleted koopa" << std::endl;
 }
 
 void CharacterKoopa::Update(float delta_time, SDL_Event e) {
@@ -115,6 +110,5 @@ void CharacterKoopa::FlipDirection() {
 
 void CharacterKoopa::OnKill() {
 	Character::OnKill();
-	std::cout << "KILLED TYPE :" << GetEnemyType() << std::endl;
 	SoundManager::Instance()->PlaySound(SOUND::ID::ENEMY_DIE);
 }

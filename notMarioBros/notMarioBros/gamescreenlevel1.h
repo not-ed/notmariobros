@@ -82,6 +82,9 @@ private:
 	float koopa_spawn_frequency = 9.0f;
 	float last_koopa_spawn;
 	FACING koopa_starting_direction;
+
+	// A window that can be displayed at the end of a game for the player to submit their name to the high score table.
+	ScoreNameEntryWindow scoreNameWindow;
 };
 
 #endif
