@@ -23,6 +23,12 @@ public:
 
 	// Get the hit box from mario/luigi's head - used for damaging enemies without the use of a POW block.
 	Rect2D GetHeadHitBox() { return headHitBox; }
+
+	// Reset Live count to the starting amount of 3
+	void ResetLives();
+
+	// Has the player completely run out of lives?
+	bool OutOfGame() { return (remainingLives == 0 && respawnTimer.IsExpired()); }
 protected:
 	void OnKill();
 
@@ -36,7 +42,7 @@ protected:
 	// Initial starting position, and where to return to upon respawning.
 	Vector2D spawnPoint;
 
-	int remainingLives = 3;
+	static int remainingLives;
 	
 	// Used in collision detection for damaging enemies without the use of a POW block.
 	Rect2D headHitBox = Rect2D{ 0,0,0,0 };

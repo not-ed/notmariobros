@@ -12,6 +12,7 @@ namespace SOUND {
 		ENEMY_HURT,
 		ENEMY_DIE,
 		COIN,
+		NEW_HIGH_SCORE,
 		count
 	};
 }

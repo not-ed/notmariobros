@@ -27,6 +27,10 @@ void GameScreenManager::Render() {
 
 void GameScreenManager::Update(float delta_time, SDL_Event e) {
 	currentScreen->Update(delta_time, e);
+	if (currentScreen->IsRequestingScreenSwitch())
+	{
+		ChangeScreen(currentScreen->GetRequestedScreen());
+	}
 }
 
 void GameScreenManager::ChangeScreen(SCREENS new_screen) {

@@ -1,6 +1,94 @@
-﻿  koopa.cpp
+﻿  character.cpp
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  characterluigi.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  charactermario.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  coin.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  collisions.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  crab.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\crab.cpp(24,20): warning C4018: '<': signed/unsigned mismatch
+  fireball.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  gamescreenlevel1.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\score.h(51,1): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(33,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(38,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(43,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(59,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(71,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(106,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(115,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(318,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(356,21): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(400,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(415,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(418,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(457,20): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\gamescreenlevel1.cpp(487,20): warning C4018: '<': signed/unsigned mismatch
+  gamescreenmanager.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\score.h(51,1): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  gamescreentitle.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\score.h(51,1): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  icicle.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  koopa.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\character.h(29,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  main.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\score.h(51,1): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  powblock.cpp
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(26,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\commons.h(27,7): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,108): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\notMarioBros\notMarioBros\notMarioBros\powblock.h(20,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  soundmanager.cpp
+  Generating Code...
   notMarioBros.vcxproj -> D:\Projects\notMarioBros\notMarioBros\Debug\notMarioBros.exe

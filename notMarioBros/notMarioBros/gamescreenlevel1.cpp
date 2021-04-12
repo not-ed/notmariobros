@@ -10,6 +10,8 @@ GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* sc
 
 	scoreNameWindow.SetRenderer(game_renderer);
 
+	gameOverTimer.SetTime(GAME_OVER_TIME, false);
+
 	SetUpLevel();
 }
 
@@ -128,6 +130,12 @@ void GameScreenLevel1::Render() {
 	Text::Draw(to_string(enemies.size()), IntVector2D(32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 	Text::Draw(to_string(enemies.size()), IntVector2D(SCREEN_WIDTH - 32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 
+	// The game over sequence is being displayed
+	if (!gameOverTimer.IsExpired())
+	{
+		Text::Draw("GAME OVER", IntVector2D(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
+	}
+
 	// Display the high score name entry window if it is being used.
 	if (scoreNameWindow.IsDisplayed())
 	{
@@ -137,32 +145,39 @@ void GameScreenLevel1::Render() {
 }
 
 void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
+	// The game over screen is being displayed, so game logic does not need to be updated.
+	if (!gameOverTimer.IsExpired())
+	{
+		gameOverTimer.Update(delta_time);
+
+		// If the last update has ran out the game over timer, display the high score menu if needed and then return to main menu.
+		if (gameOverTimer.IsExpired())
+		{
+			// Check if a highscore is eligible for addition to the high score table, if it is, call the score name window before returning to the main menu.
+			if (HighScore::NewScoreAchieved(scoreCounter->GetCurrentScore()))
+			{
+				SoundManager::Instance()->StopMusic();
+				SoundManager::Instance()->PlaySound(SOUND::ID::NEW_HIGH_SCORE);
+				scoreNameWindow.Display();
+			}
+			else {
+				RequestScreenSwitch(SCREEN_MENU);
+			}
+		}
+
+	}
 	if (scoreNameWindow.IsDisplayed())
 	{
 		scoreNameWindow.Update(delta_time, e);
 
-		//TODO: Add checking once it is closed
-		// Window has been closed by the player, meaning they've submitted a name.
+		// Window has been closed by the player, meaning they've submitted a name and score, we can now return to the main menu
 		if (!scoreNameWindow.IsDisplayed())
 		{
 			HighScore::SubmitScoreEntry(scoreNameWindow.GetEnteredName().c_str(), scoreCounter->GetCurrentScore());
+			RequestScreenSwitch(SCREEN_MENU);
 		}
 	}
 	else {
-
-		//TODO: this is just to test invocation of the high score menu, get rid of it later.
-		switch (e.type)
-		{
-		case SDL_KEYDOWN:
-			if (e.key.keysym.sym == SDLK_t) {
-				// If a new score has been achieved, get a name from the player and submit it.
-				if (HighScore::NewScoreAchieved(scoreCounter->GetCurrentScore()))
-				{
-					scoreNameWindow.Display();
-				}
-			}
-			break;
-		}
 
 		screenShakeTimer.Update(delta_time);
 
@@ -210,6 +225,16 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 		UpdateCoins(delta_time, e);
 
 		UpdateFireBalls(delta_time, e);
+
+		//Check if game is over
+		//TODO: re-enable out of game for luigi once inheritence is set up
+		if (mario->OutOfGame())
+		{
+			if (gameOverTimer.IsExpired())
+			{
+				gameOverTimer.Reset();
+			}
+		}
 	}
 }
 
@@ -231,6 +256,8 @@ bool GameScreenLevel1::SetUpLevel() {
 	// Setting up player character
 	mario = new CharacterMario(renderer, Vector2D(64, 330), levelMap);
 	players[0] = mario;
+	// As this is the first level of any run, lives can be reset here.
+	mario->ResetLives();
 
 	// TODO: This should be set up so that luigi is spawned when 2P is set.
 	luigi = new CharacterLuigi(renderer, Vector2D(432, 330), levelMap);

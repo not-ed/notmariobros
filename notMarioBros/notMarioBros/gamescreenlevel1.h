@@ -85,6 +85,9 @@ private:
 
 	// A window that can be displayed at the end of a game for the player to submit their name to the high score table.
 	ScoreNameEntryWindow scoreNameWindow;
+
+	// How long the game over sequence is displayed at the end of a game.
+	Timer gameOverTimer;
 };
 
 #endif

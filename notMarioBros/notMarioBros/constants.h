@@ -9,6 +9,9 @@
 // Mario/luigi movement speed
 #define MOVEMENTSPEED 128.0f
 
+// How many lives mario/luigi start a game with.
+#define STARTING_LIFE_COUNT 3
+
 #define GRAVITY 160.0f
 
 #define INITIAL_JUMP_FORCE 500.00f
@@ -55,5 +58,7 @@
 #define SCORE_CRAB_KILLED 230
 #define SCORE_LEVEL_COMPLETED 500
 
+// How long to display the game over screen for
+#define GAME_OVER_TIME 3.0f
 
 #endif

@@ -1,5 +1,7 @@
 #include "charactermario.h"
 
+int CharacterMario::remainingLives;
+
 CharacterMario::CharacterMario(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : Character(renderer, start_position, map) {
 	movementSpeed = MOVEMENTSPEED;
 
@@ -103,10 +105,6 @@ void CharacterMario::Respawn() {
 		position = spawnPoint;
 		invincibilityTimer.Reset();
 	}
-	else {
-		//TODO: Mark "out of game status"
-	}
-	
 }
 
 void CharacterMario::RenderGUI() {
@@ -121,4 +119,8 @@ void CharacterMario::RenderGUI() {
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderDrawRect(renderer, &boxt);
 	SDL_SetRenderDrawColor(renderer,255,255,255,255);*/
+}
+
+void CharacterMario::ResetLives() {
+	remainingLives = STARTING_LIFE_COUNT;
 }
