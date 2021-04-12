@@ -147,6 +147,8 @@
     <ClCompile Include="charactermario.cpp" />
     <ClCompile Include="coin.cpp" />
     <ClCompile Include="collisions.cpp" />
+    <ClCompile Include="crab.cpp" />
+    <ClCompile Include="fireball.cpp" />
     <ClCompile Include="gamescreen.cpp" />
     <ClCompile Include="gamescreenlevel1.cpp" />
     <ClCompile Include="gamescreenmanager.cpp" />
@@ -179,6 +181,8 @@
     <ClInclude Include="collisions.h" />
     <ClInclude Include="commons.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="crab.h" />
+    <ClInclude Include="fireball.h" />
     <ClInclude Include="gamescreen.h" />
     <ClInclude Include="gamescreenlevel1.h" />
     <ClInclude Include="gamescreenmanager.h" />

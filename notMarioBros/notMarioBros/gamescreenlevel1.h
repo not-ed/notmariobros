@@ -18,6 +18,7 @@
 #include "characterluigi.h"
 #include "koopa.h"
 #include "icicle.h"
+#include "crab.h"
 
 class GameScreenLevel1 : GameScreen
 {
@@ -60,25 +61,27 @@ private:
 	
 	// Enemies
 	void UpdateEnemies(float delta_time, SDL_Event e);
-	void CreateKoopa(Vector2D position, FACING direction, float speed);
-	//TODO: Create Crab
-	void CreateIcicle(Vector2D position, FACING direction, float speed);
-
-	// Query an enemy who has been injured for its true derived type (if not a koopa) and apply type specific behaviours if needed
-	void QueryEnemyTypeBehaviour(CharacterKoopa* enemy);
-
-	vector<CharacterKoopa*> m_enemies;
-	//TODO: Crabs
-	//TODO: Icicles
+	void CreateKoopa(Vector2D position, FACING direction);
+	void CreateCrab(Vector2D position, FACING direction);
+	void CreateIcicle(Vector2D position, FACING direction);
+	// Any enemies that exist in the scene so far.
+	vector<CharacterKoopa*> enemies;
+	
+	void UpdateCoins(float delta_time, SDL_Event e);
+	// Any coins that exist in the level, which update and behave independently from enemies.
 	vector<Coin*> coins;
+
+	void UpdateFireBalls(float delta_time, SDL_Event e);
+	// Any fireballs that exist in the level, which update and behave independently from enemies.
+	vector<FireBall*> fireballs;
+
+	// Query if an injured/killed enemy is an Icicle enemy, in order to determine whether to spawn coins on enemy death.
+	void QueryIcicleInjury(CharacterKoopa* enemy);
 
 	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
 	float koopa_spawn_frequency = 9.0f;
 	float last_koopa_spawn;
 	FACING koopa_starting_direction;
-
-
-	//Coin* test;
 };
 
 #endif

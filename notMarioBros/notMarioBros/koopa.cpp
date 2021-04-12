@@ -1,9 +1,8 @@
 #include "koopa.h"
 
-CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float movement_speed) : Character(renderer, start_position, map) {
+CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing) : Character(renderer, start_position, map) {
 	std::cout << "KOOPA" << std::endl;
 	facingDirection = start_facing;
-	movementSpeed = movement_speed;
 	position = start_position;
 	injured = false;
 
