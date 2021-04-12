@@ -1,7 +1,7 @@
 #include "gamescreenlevel1.h"
 
 // The required parameters also need to be passed through the GameScreens constructor.
-GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer) : GameScreen(game_renderer) {
+GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter) : GameScreen(game_renderer,score_counter) {
 	levelMap = nullptr;
 	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
 	last_koopa_spawn = koopa_spawn_frequency;
@@ -119,7 +119,7 @@ void GameScreenLevel1::Render() {
 	}
 
 	// Draw Score
-	Text::Draw("0000000000", IntVector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT - 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
+	Text::Draw(to_string(scoreCounter->GetCurrentScore()), IntVector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT - 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 
 	// Draw remaining enemy counters
 	Text::Draw(to_string(enemies.size()), IntVector2D(32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
@@ -255,6 +255,8 @@ void GameScreenLevel1::DoScreenShake() {
 		enemies[i]->TakeDamage();
 
 		QueryIcicleInjury(enemies[i]);
+
+		scoreCounter->Add(SCORE_POW_BLOCK_STUN);
 	}
 }
 
@@ -328,6 +330,9 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 								players[j]->CancelJump();
 
 								QueryIcicleInjury(enemies[i]);
+
+								// Award double points if the enemy is angry
+								scoreCounter->Add(SCORE_ENEMY_STUNNED,1 + enemies[i]->IsAngry());
 							}
 						}
 						/*else*/ if (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) { // Player has collided with an enemy while on the ground
@@ -337,6 +342,19 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 								if (enemies[i]->IsAlive()) {
 									//Kill the enemy
 									enemies[i]->SetAlive(false);
+									
+									// Award score based on the type of enemy killed, and double it if they were angry
+									switch (enemies[i]->GetEnemyType())
+									{
+									case ENEMY_TYPE::KOOPA:
+										scoreCounter->Add(SCORE_KOOPA_KILLED, 1 + enemies[i]->IsAngry());
+										break;
+									case ENEMY_TYPE::CRAB:
+										scoreCounter->Add(SCORE_CRAB_KILLED, 1 + enemies[i]->IsAngry());
+										break;
+									default:
+										break;
+									}
 								}
 							}
 							else { // The enemy is not stunned
@@ -391,9 +409,7 @@ void GameScreenLevel1::UpdateCoins(float delta_time, SDL_Event e) {
 						delete coins[i];
 						coins.erase(coins.begin() + i);
 						SoundManager::Instance()->PlaySound(SOUND::ID::COIN);
-
-						// TODO: give coin pickup score
-
+						scoreCounter->Add(SCORE_COIN_COLLECTED);
 						break;
 					}
 				}

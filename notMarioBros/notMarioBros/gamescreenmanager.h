@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include "commons.h"
+#include "score.h"
 
 class GameScreen;
 
@@ -23,6 +24,8 @@ private:
 	SDL_Renderer* renderer;
 
 	GameScreen* currentScreen;
+
+	ScoreCounter score;
 };
 
 #endif

@@ -4,8 +4,9 @@
 
 
 // The required parameters also need to be passed through the GameScreens constructor.
-GameScreenTitle::GameScreenTitle(SDL_Renderer* game_renderer) : GameScreen(game_renderer) {
+GameScreenTitle::GameScreenTitle(SDL_Renderer* game_renderer, ScoreCounter* score_counter) : GameScreen(game_renderer,score_counter) {
 	SetUpLevel();
+	scoreCounter->Reset();
 }
 
 bool GameScreenTitle::SetUpLevel() {

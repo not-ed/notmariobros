@@ -31,6 +31,27 @@ struct HighScoreData {
 	}
 };
 
+// An encapsulation of a integer used for keeping track of game score with convenience functions
+struct ScoreCounter {
+	int currentScore;
+
+	void Reset() {
+		currentScore = 0;
+	}
+
+	void Add(int amount) {
+		currentScore += amount;
+	}
+
+	void Add(int amount, float multiplier) {
+		currentScore += (amount * multiplier);
+	}
+
+	int GetCurrentScore() {
+		return currentScore;
+	}
+};
+
 namespace HighScore {
 
 	// Potentially destructive functions, such as erasing file data are held in an Anonymous namespace.

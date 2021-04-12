@@ -23,7 +23,7 @@
 class GameScreenLevel1 : GameScreen
 {
 public:
-	GameScreenLevel1(SDL_Renderer* game_renderer);
+	GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter);
 	~GameScreenLevel1();
 
 	void Render() override;

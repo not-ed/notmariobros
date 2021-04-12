@@ -32,6 +32,8 @@ public:
 
 	bool GetInjured() { return injured; }
 
+	bool IsAngry() { return angry; }
+
 protected:
 	// Relevant texture IDs for roaming, stunned and dead states, as well as dedicated sprites for when angry.
 	TEXTURE::ID textureRoaming[2] = { TEXTURE::ID::KOOPA,TEXTURE::ID::KOOPA_ANGRY };

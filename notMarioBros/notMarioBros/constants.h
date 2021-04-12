@@ -47,4 +47,13 @@
 // Icicle movement speeds
 #define ICICLE_SPEED 200.0f
 
+// Scoring values
+#define SCORE_COIN_COLLECTED 1500
+#define SCORE_POW_BLOCK_STUN 100
+#define SCORE_ENEMY_STUNNED 25
+#define SCORE_KOOPA_KILLED 150
+#define SCORE_CRAB_KILLED 230
+#define SCORE_LEVEL_COMPLETED 500
+
+
 #endif

@@ -16,7 +16,7 @@ class Texture2D;
 class GameScreenTitle : GameScreen
 {
 public:
-	GameScreenTitle(SDL_Renderer* game_renderer);
+	GameScreenTitle(SDL_Renderer* game_renderer, ScoreCounter* score_counter);
 
 	void Render() override;
 	void Update(float delta_time, SDL_Event e) override;
