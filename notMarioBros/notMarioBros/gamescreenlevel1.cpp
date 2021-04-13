@@ -120,7 +120,7 @@ void GameScreenLevel1::Render() {
 	mario->RenderGUI();
 	if (luigi != nullptr)
 	{
-		//luigi->RenderGUI(); TODO: This can be uncommented once luigi inheritence is set up
+		luigi->RenderGUI();
 	}
 
 	// Draw Score
@@ -164,8 +164,9 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 				RequestScreenSwitch(SCREEN_MENU);
 			}
 		}
-
+		return; // Return early, if this or the high score screen is being shown, the game doesn't need to update, only be drawn.
 	}
+
 	if (scoreNameWindow.IsDisplayed())
 	{
 		scoreNameWindow.Update(delta_time, e);
@@ -176,8 +177,11 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 			HighScore::SubmitScoreEntry(scoreNameWindow.GetEnteredName().c_str(), scoreCounter->GetCurrentScore());
 			RequestScreenSwitch(SCREEN_MENU);
 		}
+		return; // Return early, if this or the game over screen is being shown, the game doesn't need to update, only be drawn.
 	}
-	else {
+	
+	// Neither screen is being shown.
+	{
 
 		screenShakeTimer.Update(delta_time);
 
@@ -227,8 +231,7 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 		UpdateFireBalls(delta_time, e);
 
 		//Check if game is over
-		//TODO: re-enable out of game for luigi once inheritence is set up
-		if (mario->OutOfGame())
+		if (mario->OutOfGame() && (luigi == nullptr || luigi->OutOfGame()))
 		{
 			if (gameOverTimer.IsExpired())
 			{
@@ -253,19 +256,24 @@ bool GameScreenLevel1::SetUpLevel() {
 	// Establish level map data
 	SetLevelMap();
 
-	// Setting up player character
+	// Setting up player characters
 	mario = new CharacterMario(renderer, Vector2D(64, 330), levelMap);
 	players[0] = mario;
 	// As this is the first level of any run, lives can be reset here.
 	mario->ResetLives();
 
+	//if luigi
+	
+
 	// TODO: This should be set up so that luigi is spawned when 2P is set.
-	luigi = new CharacterLuigi(renderer, Vector2D(432, 330), levelMap);
-	players[1] = nullptr;
+	luigi = new CharacterLuigi(renderer, Vector2D(416, 330), levelMap);
+	players[1] = luigi;
 	// Setting up POW block
 	powBlock = new PowBlock(renderer, levelMap);
 	//screenshakeIsActive = false;
 	backgroundYPos = 0.0f;
+
+	luigi->ResetLives();
 
 	// Create Koopas
 	// TODO: remove this later as levels move to manifesting

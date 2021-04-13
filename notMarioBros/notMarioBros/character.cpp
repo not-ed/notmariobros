@@ -52,11 +52,22 @@ void Character::Update(float delta_time, SDL_Event e) {
 	//TODO: this does not need to be 2 boolean variables, this can be tied to an axis multiplier
 	if (movingLeft)
 	{
-		MoveLeft(delta_time);
+		bool wont_hit_wall = currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1) / TILE_HEIGHT, (position.x - (movementSpeed * delta_time)) / TILE_WIDTH) == 0;
+		// Stop a character from moving into a wall when they're not supposed to and get stuck and can't get out on their own.
+		if (wont_hit_wall || jumping)
+		{
+			MoveLeft(delta_time);
+		}
+		
 	}
 	else if (movingRight)
 	{
-		MoveRight(delta_time);
+		bool wont_hit_wall = currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1) / TILE_HEIGHT, (position.x + anim.GetFrameWidth() + (movementSpeed * delta_time)) / TILE_WIDTH) == 0;
+		// Stop a character from moving into a wall when they're not supposed to and get stuck and can't get out on their own.
+		if (wont_hit_wall || jumping)
+		{
+			MoveRight(delta_time);
+		}
 	}
 
 }
@@ -123,17 +134,34 @@ void Character::OnKill() {
 }
 
 void Character::Debug_RenderHitbox() {
-	/*Rect2D r = GetCollisionBox();
-	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);
-	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ (int)r.x,(int)r.y,(int)r.width,(int)r.height });
+	//Rect2D r = GetCollisionBox();
+	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128);
+	//SDL_RenderDrawRect(renderer, new SDL_Rect{ (int)r.x,(int)r.y,(int)r.width,(int)r.height });
 
-	int central_x = (int)(m_position.x + ((anim.GetFrameWidth() * .5f)));
-	int foot_position = (int)(m_position.y + m_texture->GetHeight());
-	SDL_SetRenderDrawColor(m_renderer, 0, 255, 255, 255);
-	
-	SDL_RenderDrawRect(m_renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
+	//int central_x = (int)(position.x + ((anim.GetFrameWidth() * .5f)));
+	//int foot_position = (int)(position.y + anim.GetFrameHeight());
+	//SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+	//
+	//SDL_RenderDrawRect(renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
 
-	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);*/
+	//SDL_SetRenderDrawColor(renderer, 0, 255, 0, .001);
+
+	//SDL_Rect Lr = { 0,0,TILE_WIDTH,TILE_HEIGHT };
+	//for (int i = 0; i < MAP_WIDTH; i++)
+	//{
+	//	for (int j = 0; j < MAP_HEIGHT; j++)
+	//	{
+	//		Lr.x = i * TILE_WIDTH;
+	//		Lr.y = j * TILE_HEIGHT;
+	//		if (currentLevelMap->GetTileAt(j,i) == 1)
+	//		{
+	//			SDL_RenderDrawRect(renderer, &Lr);
+	//		}
+	//	}
+	//}
+
+	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
 }
 
 bool Character::InLevelBounds() {

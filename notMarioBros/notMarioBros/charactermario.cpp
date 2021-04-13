@@ -1,7 +1,5 @@
 #include "charactermario.h"
 
-int CharacterMario::remainingLives;
-
 CharacterMario::CharacterMario(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : Character(renderer, start_position, map) {
 	movementSpeed = MOVEMENTSPEED;
 
@@ -23,23 +21,23 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 		switch (e.type)
 		{
 		case SDL_KEYDOWN:
-			if (e.key.keysym.sym == SDLK_LEFT) {
+			if (e.key.keysym.sym == moveLeftKey) {
 				movingLeft = true;
 				anim.SetFlip(SDL_FLIP_HORIZONTAL);
 			}
-			if (e.key.keysym.sym == SDLK_RIGHT) {
+			if (e.key.keysym.sym == moveRightKey) {
 				movingRight = true;
 				anim.SetFlip(SDL_FLIP_NONE);
 			}
-			if (e.key.keysym.sym == SDLK_UP) {
+			if (e.key.keysym.sym == jumpKey) {
 				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);}
 			}
 			break;
 		case SDL_KEYUP:
-			if (e.key.keysym.sym == SDLK_LEFT) {
+			if (e.key.keysym.sym == moveLeftKey) {
 				movingLeft = false;
 			}
-			if (e.key.keysym.sym == SDLK_RIGHT) {
+			if (e.key.keysym.sym == moveRightKey) {
 				movingRight = false;
 			}
 			break;
@@ -72,6 +70,18 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 
 	//Update head hit box
 	headHitBox = Rect2D{ position.x,position.y - 2,GetCollisionBox().width,4 };
+
+	// Stop mario/luigi getting stuck inside a floor vertically if their jump cancels whilst their feet are intersecting.
+	// This can occur in circumstances like an awkard height of an enemy being stunned parallel to where mario/luigi is when they make contact.
+	if (!jumping && canJump)
+	{
+		if (currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1)/TILE_HEIGHT, centralXPosition) == 1) // stuck in floor
+		{
+			position.y -= 1;
+		}
+	}
+
+	std::cout << hudNamePrefix <<IsJumping() << canJump << std::endl;
 }
 
 void CharacterMario::Render() {

@@ -42,7 +42,7 @@ protected:
 	// Initial starting position, and where to return to upon respawning.
 	Vector2D spawnPoint;
 
-	static int remainingLives;
+	int remainingLives;
 	
 	// Used in collision detection for damaging enemies without the use of a POW block.
 	Rect2D headHitBox = Rect2D{ 0,0,0,0 };
@@ -52,6 +52,11 @@ protected:
 	TEXTURE::ID runTexture = TEXTURE::ID::MARIO_RUN;
 	TEXTURE::ID jumpTexture = TEXTURE::ID::MARIO_JUMP;
 	TEXTURE::ID dieTexture = TEXTURE::ID::MARIO_DIE;
+
+	// Movement controls
+	SDL_Keycode moveLeftKey = SDLK_LEFT;
+	SDL_Keycode moveRightKey = SDLK_RIGHT;
+	SDL_Keycode jumpKey = SDLK_UP;
 
 	// Font, allignment, and position to use for drawing remaining lives as text in RenderGUI.
 	FONT::ID hudFont = FONT::ID::MARIO;

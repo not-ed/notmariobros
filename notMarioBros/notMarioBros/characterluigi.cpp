@@ -1,35 +1,22 @@
 #include "characterluigi.h"
 
-CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : Character(renderer, start_position, map) {
-	movementSpeed = MOVEMENTSPEED;
-}
+CharacterLuigi::CharacterLuigi(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map) : CharacterMario(renderer, start_position, map) {
+	// Overide movement keys so they are not shared with CharacterMario
+	moveLeftKey = SDLK_a;
+	moveRightKey = SDLK_d;
+	jumpKey = SDLK_w;
 
-void CharacterLuigi::Update(float deltaTime, SDL_Event e) {
+	// Override animation textures inherited from CharacterMario
+	idleTexture = TEXTURE::ID::LUIGI_IDLE;
+	runTexture = TEXTURE::ID::LUIGI_RUN;
+	jumpTexture = TEXTURE::ID::LUIGI_JUMP;
+	dieTexture = TEXTURE::ID::LUIGI_DIE;
 
-	switch (e.type)
-	{
-	case SDL_KEYDOWN:
-		if (e.key.keysym.sym == SDLK_a) {
-			movingLeft = true;
-		}
-		if (e.key.keysym.sym == SDLK_d) {
-			movingRight = true;
-		}
-		if (e.key.keysym.sym == SDLK_w) {
-			if (canJump) { Jump(INITIAL_JUMP_FORCE); }
-		}
-		break;
-	case SDL_KEYUP:
-		if (e.key.keysym.sym == SDLK_a) {
-			movingLeft = false;
-		}
-		if (e.key.keysym.sym == SDLK_d) {
-			movingRight = false;
-		}
-		break;
-	default:
-		break;
-	}
+	// Override hud rendering parameters
+	hudFont = FONT::ID::LUIGI;
+	hudFontAllignment = FONT::ALLIGNMENT::RIGHT;
+	hudTextPosition = IntVector2D(SCREEN_WIDTH - 8, SCREEN_HEIGHT - 24);
+	hudNamePrefix = "LUIGI: ";
 
-	Character::Update(deltaTime, e);
+	anim.SetFlip(SDL_FLIP_HORIZONTAL);
 }
