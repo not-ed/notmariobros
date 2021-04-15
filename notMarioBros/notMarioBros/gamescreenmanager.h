@@ -26,6 +26,8 @@ private:
 	GameScreen* currentScreen;
 
 	ScoreCounter score;
+
+	SCREENS currentScreenID = SCREENS::SCREEN_MENU;
 };
 
 #endif

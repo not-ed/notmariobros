@@ -49,7 +49,6 @@ void Character::Update(float delta_time, SDL_Event e) {
 		canJump = true;
 	}
 
-	//TODO: this does not need to be 2 boolean variables, this can be tied to an axis multiplier
 	if (movingLeft)
 	{
 		bool wont_hit_wall = currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1) / TILE_HEIGHT, (position.x - (movementSpeed * delta_time)) / TILE_WIDTH) == 0;
@@ -70,6 +69,15 @@ void Character::Update(float delta_time, SDL_Event e) {
 		}
 	}
 
+	// Shift character upwards if they are stuck inside the floor for whatever reason, such as awkward jump heights, being stunned between level bounds etc.
+	if (!jumping && canJump)
+	{
+		// stuck in floor
+		if (currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1) / TILE_HEIGHT, centralXPosition) == 1)
+		{
+			position.y -= 1;
+		}
+	}
 }
 
 void Character::SetPosition(Vector2D new_position) {
@@ -80,7 +88,6 @@ Vector2D Character::GetPosition() {
 	return position;
 }
 
-//TODO: These 2 functions do not need to be seperate just to change direction, this can be done via an axis multiplier.
 void Character::MoveLeft(float delta_time) {
 	facingDirection = FACING::FACING_LEFT;
 	position.x -= delta_time * movementSpeed;
@@ -88,10 +95,8 @@ void Character::MoveLeft(float delta_time) {
 
 void Character::MoveRight(float delta_time) {
 	facingDirection = FACING::FACING_RIGHT;
-	float prev_x = position.x;
 	position.x += delta_time * movementSpeed;
 }
-//
 
 void Character::AddGravity(float delta_time) {
 	// If the character is below the lowest floor of the screen when gravity is applied and still alive, then we cannot move them down further, otherwise they will go off-screen.
@@ -131,37 +136,6 @@ void Character::SetAlive(bool is_alive) {
 
 void Character::OnKill() {
 	Jump(KILL_JUMP_FORCE);
-}
-
-void Character::Debug_RenderHitbox() {
-	//Rect2D r = GetCollisionBox();
-	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128);
-	//SDL_RenderDrawRect(renderer, new SDL_Rect{ (int)r.x,(int)r.y,(int)r.width,(int)r.height });
-
-	//int central_x = (int)(position.x + ((anim.GetFrameWidth() * .5f)));
-	//int foot_position = (int)(position.y + anim.GetFrameHeight());
-	//SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-	//
-	//SDL_RenderDrawRect(renderer, new SDL_Rect{ central_x - 1,foot_position - 1,2,2 });
-
-	//SDL_SetRenderDrawColor(renderer, 0, 255, 0, .001);
-
-	//SDL_Rect Lr = { 0,0,TILE_WIDTH,TILE_HEIGHT };
-	//for (int i = 0; i < MAP_WIDTH; i++)
-	//{
-	//	for (int j = 0; j < MAP_HEIGHT; j++)
-	//	{
-	//		Lr.x = i * TILE_WIDTH;
-	//		Lr.y = j * TILE_HEIGHT;
-	//		if (currentLevelMap->GetTileAt(j,i) == 1)
-	//		{
-	//			SDL_RenderDrawRect(renderer, &Lr);
-	//		}
-	//	}
-	//}
-
-	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
 }
 
 bool Character::InLevelBounds() {

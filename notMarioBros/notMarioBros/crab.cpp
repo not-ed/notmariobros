@@ -1,6 +1,6 @@
 #include "crab.h"
 
-CharacterCrab::CharacterCrab(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing) : CharacterKoopa(renderer, start_position, map, start_facing)
+CharacterCrab::CharacterCrab(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time) : CharacterKoopa(renderer, start_position, map, start_facing, activation_time)
 {
 	// Override texture IDs inherited from Koopa class
 	textureRoaming[0] = TEXTURE::ID::CRAB;
@@ -29,18 +29,21 @@ CharacterCrab::~CharacterCrab()
 
 void CharacterCrab::Update(float delta_time, SDL_Event e) {
 	CharacterKoopa::Update(delta_time, e);
-	fireballSpawnTimer.Update(delta_time);
-
-	if (fireballSpawnTimer.IsExpired() && IsAlive() && !GetInjured())
+	if (IsActivated())
 	{
-		CreateFireballs();
-		fireballSpawnTimer.Reset();
-	}
+		fireballSpawnTimer.Update(delta_time);
 
-	// Increase fireball frequency if angry
-	if (angry)
-	{
-		fireballSpawnTimer.SetTime(fireballSpawnFrequencyAngry, false);
+		if (fireballSpawnTimer.IsExpired() && IsAlive() && !GetInjured())
+		{
+			CreateFireballs();
+			fireballSpawnTimer.Reset();
+		}
+
+		// Increase fireball frequency if angry
+		if (angry)
+		{
+			fireballSpawnTimer.SetTime(fireballSpawnFrequencyAngry, false);
+		}
 	}
 }
 

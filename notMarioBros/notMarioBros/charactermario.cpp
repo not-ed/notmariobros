@@ -23,11 +23,9 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 		case SDL_KEYDOWN:
 			if (e.key.keysym.sym == moveLeftKey) {
 				movingLeft = true;
-				anim.SetFlip(SDL_FLIP_HORIZONTAL);
 			}
 			if (e.key.keysym.sym == moveRightKey) {
 				movingRight = true;
-				anim.SetFlip(SDL_FLIP_NONE);
 			}
 			if (e.key.keysym.sym == jumpKey) {
 				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);}
@@ -70,21 +68,18 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 
 	//Update head hit box
 	headHitBox = Rect2D{ position.x,position.y - 2,GetCollisionBox().width,4 };
-
-	// Stop mario/luigi getting stuck inside a floor vertically if their jump cancels whilst their feet are intersecting.
-	// This can occur in circumstances like an awkard height of an enemy being stunned parallel to where mario/luigi is when they make contact.
-	if (!jumping && canJump)
-	{
-		if (currentLevelMap->GetTileAt((position.y + anim.GetFrameHeight() - 1)/TILE_HEIGHT, centralXPosition) == 1) // stuck in floor
-		{
-			position.y -= 1;
-		}
-	}
-
-	std::cout << hudNamePrefix <<IsJumping() << canJump << std::endl;
 }
 
 void CharacterMario::Render() {
+
+	if (movingLeft)
+	{
+		anim.SetFlip(SDL_FLIP_HORIZONTAL);
+	}
+	else if (movingRight) {
+		anim.SetFlip(SDL_FLIP_NONE);
+	}
+
 	// Render the relevant texture and frame from the animator, if mario/luigi is currently invincible rendering will blink for the duration that this occurs.
 	if (!Invincible() || (Invincible() && (int)(invincibilityTimer.RemainingTime() / .10) % 2 == 0)) {
 		anim.Render(position, 0.0);
@@ -118,8 +113,6 @@ void CharacterMario::Respawn() {
 }
 
 void CharacterMario::RenderGUI() {
-	Debug_RenderHitbox();
-
 	std::string hud_text = hudNamePrefix;
 	hud_text.append(to_string(remainingLives));
 

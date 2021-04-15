@@ -1,16 +1,12 @@
 #include "gamescreenlevel1.h"
 
 // The required parameters also need to be passed through the GameScreens constructor.
-GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter) : GameScreen(game_renderer,score_counter) {
+GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter, bool include_luigi) : GameScreen(game_renderer,score_counter) {
 	levelMap = nullptr;
-	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
-	last_koopa_spawn = koopa_spawn_frequency;
-	koopa_starting_direction = FACING_LEFT;
-	//
+
+	isTwoPlayer = include_luigi;
 
 	scoreNameWindow.SetRenderer(game_renderer);
-
-	gameOverTimer.SetTime(GAME_OVER_TIME, false);
 
 	SetUpLevel();
 }
@@ -54,16 +50,18 @@ void GameScreenLevel1::Render() {
 	// Pointers to characters that are dead, so that they can be drawn last to appear at the end of the render loop.
 	std::vector<Character*> dead_characters;
 
-
 	// Render all enemies
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		if (enemies[i]->IsAlive()) {
-			enemies[i]->Render();
-		}
-		else {
-			// Put off rendering if dead until the end of the loop.
-			dead_characters.push_back(enemies[i]); 
+		if (enemies[i]->IsActivated())
+		{
+			if (enemies[i]->IsAlive()) {
+				enemies[i]->Render();
+			}
+			else {
+				// Put off rendering if dead until the end of the loop.
+				dead_characters.push_back(enemies[i]);
+			}
 		}
 	}
 
@@ -86,7 +84,7 @@ void GameScreenLevel1::Render() {
 	
 	
 
-	// If game is actually being played 2P
+	// If game is being played 2P
 	if (luigi != nullptr)
 	{
 		if (luigi->IsAlive())
@@ -141,7 +139,6 @@ void GameScreenLevel1::Render() {
 	{
 		scoreNameWindow.Render();
 	}
-
 }
 
 void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
@@ -180,63 +177,41 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 		return; // Return early, if this or the game over screen is being shown, the game doesn't need to update, only be drawn.
 	}
 	
-	// Neither screen is being shown.
+	// Neither screen is being shown. We can continue with the update loop as normal
+
+	// Screen shake (if applicable)
+	screenShakeTimer.Update(delta_time);
+	if (!screenShakeTimer.IsExpired()) {
+		accumulatedWobble++;
+		backgroundYPos = sin(accumulatedWobble);
+		backgroundYPos *= 8.0;
+	}
+	else {
+		backgroundYPos = 0.0f;
+	}
+
+	//Update mario/luigi
+	mario->Update(delta_time, e);
+	QueryLevelBounds(mario);
+	if (luigi != nullptr) {
+		luigi->Update(delta_time, e);
+		QueryLevelBounds(luigi);
+	}
+
+	UpdatePOWBlock();
+
+	UpdateEnemies(delta_time, e);
+
+	UpdateCoins(delta_time, e);
+
+	UpdateFireBalls(delta_time, e);
+
+	//Check if game is over
+	if (mario->OutOfGame() && (luigi == nullptr || luigi->OutOfGame()))
 	{
-
-		screenShakeTimer.Update(delta_time);
-
-
-		// Screen shake (if applicable)
-		if (!screenShakeTimer.IsExpired()) {
-			accumulatedWobble++;
-			backgroundYPos = sin(accumulatedWobble);
-			backgroundYPos *= 8.0;
-		}
-		else {
-			backgroundYPos = 0.0f;
-		}
-
-		// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
-		last_koopa_spawn -= delta_time;
-		if (last_koopa_spawn <= 0.0f) {
-
-			last_koopa_spawn = koopa_spawn_frequency;
-
-			if (koopa_starting_direction == FACING_LEFT) {
-				CreateKoopa(Vector2D(SCREEN_WIDTH - 32, 32), FACING_LEFT);
-				koopa_starting_direction = FACING_RIGHT;
-			}
-			else {
-				CreateKoopa(Vector2D(0, 32), FACING_RIGHT);
-				koopa_starting_direction = FACING_LEFT;
-			}
-
-		}
-		//////////////////////////////
-
-		//Update mario/luigi
-		mario->Update(delta_time, e);
-		QueryLevelBounds(mario);
-		if (luigi != nullptr) {
-			luigi->Update(delta_time, e);
-			QueryLevelBounds(luigi);
-		}
-
-		UpdatePOWBlock();
-
-		UpdateEnemies(delta_time, e);
-
-		UpdateCoins(delta_time, e);
-
-		UpdateFireBalls(delta_time, e);
-
-		//Check if game is over
-		if (mario->OutOfGame() && (luigi == nullptr || luigi->OutOfGame()))
+		if (gameOverTimer.IsExpired())
 		{
-			if (gameOverTimer.IsExpired())
-			{
-				gameOverTimer.Reset();
-			}
+			gameOverTimer.Reset();
 		}
 	}
 }
@@ -263,28 +238,24 @@ bool GameScreenLevel1::SetUpLevel() {
 	mario->ResetLives();
 
 	//if luigi
-	
+	if (isTwoPlayer)
+	{
+		luigi = new CharacterLuigi(renderer, Vector2D(416, 330), levelMap);
+		players[1] = luigi;
+		luigi->ResetLives();
+	}
 
-	// TODO: This should be set up so that luigi is spawned when 2P is set.
-	luigi = new CharacterLuigi(renderer, Vector2D(416, 330), levelMap);
-	players[1] = luigi;
 	// Setting up POW block
 	powBlock = new PowBlock(renderer, levelMap);
 	//screenshakeIsActive = false;
 	backgroundYPos = 0.0f;
 
-	luigi->ResetLives();
+	koopaSpawnTimer.SetTime(2.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 2.0f), true);
+	crabSpawnTimer.SetTime(10.0f + fmod(rand(), CRAB_SPAWN_TIME_MAX - 10.0f), true);
+	icicleSpawnTimer.SetTime(20.0f + fmod(rand(), ICICLE_SPAWN_TIME_MAX - 20.0f), true);
+	gameOverTimer.SetTime(GAME_OVER_TIME, false);
 
-	// Create Koopas
-	// TODO: remove this later as levels move to manifesting
-	CreateKoopa(Vector2D(150,32),FACING_RIGHT);
-	//CreateKoopa(Vector2D(325, 32), FACING_LEFT, KOOPA_SPEED);
-	CreateIcicle(Vector2D(325, 32), FACING_LEFT);
-	CreateCrab(Vector2D(SCREEN_WIDTH/2,32), FACING_RIGHT);
-	// Start playing level music
 	SoundManager::Instance()->PlayMusic(MUSIC::ID::MARIO);
-
-	
 
 	return true;
 }
@@ -321,15 +292,17 @@ void GameScreenLevel1::DoScreenShake() {
 	screenShakeTimer.Reset();
 	accumulatedWobble = 0.0f;
 
-	// Damage/stun all on-screen enemies
-	// TODO: this should only be done to enemies that are activated.
+	// Damage/stun all on-screen enemies that are "activated"
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		enemies[i]->TakeDamage();
+		if (enemies[i]->IsActivated())
+		{
+			enemies[i]->TakeDamage();
 
-		QueryIcicleInjury(enemies[i]);
+			QueryIcicleInjury(enemies[i]);
 
-		scoreCounter->Add(SCORE_POW_BLOCK_STUN);
+			scoreCounter->Add(SCORE_POW_BLOCK_STUN);
+		}
 	}
 }
 
@@ -354,8 +327,66 @@ void GameScreenLevel1::UpdatePOWBlock() {
 }
 
 void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
-	// If there is no enemies to start with, none of this needs to be done
 
+	koopaSpawnTimer.Update(delta_time);
+	crabSpawnTimer.Update(delta_time);
+	icicleSpawnTimer.Update(delta_time);
+
+	// Spawn a random number of koopas if needed
+	if (koopaSpawnTimer.IsExpired())
+	{
+		// How many koopas to spawn this time around
+		int koopa_count = rand() % 5;
+		for (int i = 0; i < koopa_count; i++)
+		{
+			if (i % 2 == 0)
+			{
+				CreateKoopa(Vector2D(SCREEN_WIDTH - 64, 32), FACING_LEFT, 1.0f * (fmod(rand(),5.0f) * i));
+			}
+			else {
+				CreateKoopa(Vector2D(32, 32), FACING_RIGHT, 1.0f * (fmod(rand(), 5.0f) * i));
+			}
+		}
+		// Set a new random spawn time and reset the timer.
+		koopaSpawnTimer.SetTime(2.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 2.0f), true);
+	}
+
+	// Spawn a random number of crabs if needed
+	if (crabSpawnTimer.IsExpired())
+	{
+		// How many koopas to spawn this time around
+		int crab_count = rand() % 3;
+		for (int i = 0; i < crab_count; i++)
+		{
+			if (i % 2 == 0)
+			{
+				CreateCrab(Vector2D(SCREEN_WIDTH - 64, 32), FACING_LEFT, 1.0f * (fmod(rand(), 10.0f) * i));
+			}
+			else {
+				CreateCrab(Vector2D(32, 32), FACING_RIGHT, 1.0f * (fmod(rand(), 10.0f) * i));
+			}
+		}
+		// Set a new random spawn time and reset the timer.
+		crabSpawnTimer.SetTime(10.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 10.0f), true);
+	}
+
+	if (icicleSpawnTimer.IsExpired())
+	{
+		int spawn_side = rand() % 2;
+
+		if (spawn_side == 0)
+		{
+			CreateIcicle(Vector2D(SCREEN_WIDTH - 64, 32), FACING_LEFT, 1.0f * (fmod(rand(), 23.0f)));
+		}
+		else {
+			CreateIcicle(Vector2D(32, 32), FACING_RIGHT, 1.0f * (fmod(rand(), 23.0f)));
+		}
+
+		// Set a new random spawn time and reset the timer.
+		icicleSpawnTimer.SetTime(20.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 20.0f), true);
+	}
+
+	// If there is no enemies to start with, none of this needs to be done
 	if (!enemies.empty()) {
 		
 		// Keep track of the next index (if any) of any enemies that need to be deleted after the loop
@@ -366,6 +397,7 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 			// Check if going off screen, and wrap accordingly if needed.
 			QueryLevelBounds(enemies[i]);
 
+			// Enemies that are not activated can still be updated, otherwise their activation timer will never count down
 			enemies[i]->Update(delta_time, e);
 
 			// If the enemy is a crab, request any held fireballs if they have them.
@@ -378,64 +410,63 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 				}
 			}
 
-
-			// For each player
-			for (int j = 0; j < 2; j++)
-			{
-				if (players[j] != nullptr)
+			// If an enemy is not yet activated, then all interaction with the player should be ignored.
+			if (enemies[i]->IsActivated()) {
+				// For each player
+				for (int j = 0; j < 2; j++)
 				{
-					// Check for enemy-to-player collision
-					if ((enemies[i]->GetPosition().y > 300.0f || enemies[i]->GetPosition().y <= 64.0f) &&
-						(enemies[i]->GetPosition().x < 64.0f || enemies[i]->GetPosition().x > SCREEN_WIDTH - 96.0f))
+					if (players[j] != nullptr)
 					{
-						// Ignore collisions; behind level pipe.
-					}
-					else if (players[j]->IsAlive()) {
+						// Collisions between the player and enemies should be ignored if they are behind and "entering" a level pipe
+						bool behind_level_pipe = (enemies[i]->GetPosition().y > 300.0f || enemies[i]->GetPosition().y <= 64.0f) && (enemies[i]->GetPosition().x < 64.0f || enemies[i]->GetPosition().x > SCREEN_WIDTH - 96.0f);
 
-						if (players[j]->IsJumping()) {
-							// If player head hitbox has hit an enemy while jumping
-							if ((!enemies[i]->GetInjured()) && (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetHeadHitBox())))
-							{
-								enemies[i]->TakeDamage();
+						if (players[j]->IsAlive() && !behind_level_pipe) {
 
-								SoundManager::Instance()->PlaySound(SOUND::ID::ENEMY_HURT);
+							if (players[j]->IsJumping()) {
+								// If player head hitbox has hit an enemy while jumping
+								if ((!enemies[i]->GetInjured()) && (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetHeadHitBox())))
+								{
+									enemies[i]->TakeDamage();
 
-								players[j]->CancelJump();
+									SoundManager::Instance()->PlaySound(SOUND::ID::ENEMY_HURT);
 
-								QueryIcicleInjury(enemies[i]);
+									players[j]->CancelJump();
 
-								// Award double points if the enemy is angry
-								scoreCounter->Add(SCORE_ENEMY_STUNNED,1 + enemies[i]->IsAngry());
-							}
-						}
-						/*else*/ if (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) { // Player has collided with an enemy while on the ground
-							// If the enemy is stunned/injured and still alive, kill it
-							if (enemies[i]->GetInjured()) {
+									QueryIcicleInjury(enemies[i]);
 
-								if (enemies[i]->IsAlive()) {
-									//Kill the enemy
-									enemies[i]->SetAlive(false);
-									
-									// Award score based on the type of enemy killed, and double it if they were angry
-									switch (enemies[i]->GetEnemyType())
-									{
-									case ENEMY_TYPE::KOOPA:
-										scoreCounter->Add(SCORE_KOOPA_KILLED, 1 + enemies[i]->IsAngry());
-										break;
-									case ENEMY_TYPE::CRAB:
-										scoreCounter->Add(SCORE_CRAB_KILLED, 1 + enemies[i]->IsAngry());
-										break;
-									default:
-										break;
-									}
+									// Award double points if the enemy is angry
+									scoreCounter->Add(SCORE_ENEMY_STUNNED, 1 + enemies[i]->IsAngry());
 								}
 							}
-							else { // The enemy is not stunned
-								// If the player is not invincible, kill them.
-								if (!players[j]->Invincible()) {
+							/*else*/ if (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) { // Player has collided with an enemy while on the ground
+								// If the enemy is stunned/injured and still alive, kill it
+								if (enemies[i]->GetInjured()) {
 
-									players[j]->SetAlive(false);
+									if (enemies[i]->IsAlive()) {
+										//Kill the enemy
+										enemies[i]->SetAlive(false);
 
+										// Award score based on the type of enemy killed, and double it if they were angry
+										switch (enemies[i]->GetEnemyType())
+										{
+										case ENEMY_TYPE::KOOPA:
+											scoreCounter->Add(SCORE_KOOPA_KILLED, 1 + enemies[i]->IsAngry());
+											break;
+										case ENEMY_TYPE::CRAB:
+											scoreCounter->Add(SCORE_CRAB_KILLED, 1 + enemies[i]->IsAngry());
+											break;
+										default:
+											break;
+										}
+									}
+								}
+								else { // The enemy is not stunned
+									// If the player is not invincible, kill them.
+									if (!players[j]->Invincible()) {
+
+										players[j]->SetAlive(false);
+
+									}
 								}
 							}
 						}
@@ -515,18 +546,18 @@ void GameScreenLevel1::UpdateFireBalls(float delta_time, SDL_Event e) {
 	}
 }
 
-void GameScreenLevel1::CreateKoopa(Vector2D position, FACING direction) {
-	CharacterKoopa* koopa = new CharacterKoopa(renderer,position, levelMap,direction);
+void GameScreenLevel1::CreateKoopa(Vector2D position, FACING direction, float activation_time) {
+	CharacterKoopa* koopa = new CharacterKoopa(renderer,position, levelMap,direction,activation_time);
 	enemies.push_back(koopa);
 }
 
-void GameScreenLevel1::CreateCrab(Vector2D position, FACING direction) {
-	CharacterCrab* crab = new CharacterCrab(renderer, position, levelMap, direction);
+void GameScreenLevel1::CreateCrab(Vector2D position, FACING direction, float activation_time) {
+	CharacterCrab* crab = new CharacterCrab(renderer, position, levelMap, direction,activation_time);
 	enemies.push_back(crab);
 }
 
-void GameScreenLevel1::CreateIcicle(Vector2D position, FACING direction) {
-	CharacterIcicle* icicle = new CharacterIcicle(renderer, position, levelMap, direction);
+void GameScreenLevel1::CreateIcicle(Vector2D position, FACING direction, float activation_time) {
+	CharacterIcicle* icicle = new CharacterIcicle(renderer, position, levelMap, direction,activation_time);
 	enemies.push_back(icicle);
 }
 
@@ -560,7 +591,7 @@ void GameScreenLevel1::QueryLevelBounds(Character* chara) {
 				chara->TriggerPipeFlag();
 			}
 			else if (chara->GetPosition().y <= 64.0f){ // Lower area to upper area
-				char_pos.y += (321.0f);
+				char_pos.y += (320.0f);
 				chara->TriggerPipeFlag();
 			}
 		}

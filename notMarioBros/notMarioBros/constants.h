@@ -48,7 +48,7 @@
 #define CRAB_ANGRY_SPEED 72.0f
 
 // Icicle movement speeds
-#define ICICLE_SPEED 200.0f
+#define ICICLE_SPEED 150.0f
 
 // Scoring values
 #define SCORE_COIN_COLLECTED 1500
@@ -60,5 +60,10 @@
 
 // How long to display the game over screen for
 #define GAME_OVER_TIME 3.0f
+
+// Maximum possible Enemy spawn times
+#define KOOPA_SPAWN_TIME_MAX 15.0f
+#define CRAB_SPAWN_TIME_MAX 30.0f
+#define ICICLE_SPAWN_TIME_MAX 40.0f
 
 #endif

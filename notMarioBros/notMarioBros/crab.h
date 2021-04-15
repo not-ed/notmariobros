@@ -9,7 +9,7 @@
 class CharacterCrab : public CharacterKoopa
 {
 public:
-	CharacterCrab(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing);
+	CharacterCrab(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time);
 	~CharacterCrab();
 
 	// Are any fireballs being held by the crab object that need to be handed over?

@@ -1,6 +1,6 @@
 #include "koopa.h"
 
-CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing) : Character(renderer, start_position, map) {
+CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time) : Character(renderer, start_position, map) {
 	facingDirection = start_facing;
 	position = start_position;
 	injured = false;
@@ -9,44 +9,49 @@ CharacterKoopa::CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, 
 	anim.SetAnimationSpeed(0.1f);
 
 	injuryTimer.SetTime(INJURED_TIME, false);
+	activationTimer.SetTime(activation_time, true);
 }
 
 void CharacterKoopa::Update(float delta_time, SDL_Event e) {
-	Character::Update(delta_time, e);
-	injuryTimer.Update(delta_time);
-	anim.Update(delta_time);
+	if (activationTimer.IsExpired())
+	{
+		Character::Update(delta_time, e);
+		injuryTimer.Update(delta_time);
+		anim.Update(delta_time);
 
-	// Become angry upon travelling through a level pipe.
-	angry = pipeTravelFlag; 
+		// Become angry upon travelling through a level pipe.
+		angry = pipeTravelFlag;
 
-	if (angry) {
-		movementSpeed = angryMovementSpeed;
-	}
-	else {
-		movementSpeed = regularMovementSpeed;
-	}
-
-	if (!injured) {
-		if (facingDirection == FACING_LEFT) {
-			movingLeft = true;
-			movingRight = false;
+		if (angry) {
+			movementSpeed = angryMovementSpeed;
 		}
-		else if (facingDirection == FACING_RIGHT)
-		{
+		else {
+			movementSpeed = regularMovementSpeed;
+		}
+
+		if (!injured) {
+			if (facingDirection == FACING_LEFT) {
+				movingLeft = true;
+				movingRight = false;
+			}
+			else if (facingDirection == FACING_RIGHT)
+			{
+				movingLeft = false;
+				movingRight = true;
+			}
+		}
+		else {
+			// Shouldn't be moving if injured/stunned
 			movingLeft = false;
-			movingRight = true;
-		}
-	}
-	else {
-		// Shouldn't be moving if injured/stunned
-		movingLeft = false;
-		movingRight = false;
+			movingRight = false;
 
-		// Flip right way up after being stunned for a fixed amount of time.
-		if (injuryTimer.IsExpired() && IsAlive()) { 
-			FlipRightWayUp(); 
+			// Flip right way up after being stunned for a fixed amount of time.
+			if (injuryTimer.IsExpired() && IsAlive()) {
+				FlipRightWayUp();
+			}
 		}
 	}
+	else activationTimer.Update(delta_time);
 }
 
 void CharacterKoopa::Render() {
@@ -72,8 +77,6 @@ void CharacterKoopa::Render() {
 	}
 
 	anim.Render(position,0.0);
-
-	Debug_RenderHitbox();
 }
 
 void CharacterKoopa::TakeDamage() {

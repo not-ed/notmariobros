@@ -23,7 +23,7 @@
 class GameScreenLevel1 : GameScreen
 {
 public:
-	GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter);
+	GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter, bool include_luigi);
 	~GameScreenLevel1();
 
 	void Render() override;
@@ -34,7 +34,6 @@ public:
 
 	// Query if a character is going off screen horizontally, and 
 	void QueryLevelBounds(Character* chara);
-
 private:
 	Texture2D* backgroundTexture;
 
@@ -61,9 +60,9 @@ private:
 	
 	// Enemies
 	void UpdateEnemies(float delta_time, SDL_Event e);
-	void CreateKoopa(Vector2D position, FACING direction);
-	void CreateCrab(Vector2D position, FACING direction);
-	void CreateIcicle(Vector2D position, FACING direction);
+	void CreateKoopa(Vector2D position, FACING direction, float activation_time);
+	void CreateCrab(Vector2D position, FACING direction, float activation_time);
+	void CreateIcicle(Vector2D position, FACING direction, float activation_time);
 	// Any enemies that exist in the scene so far.
 	vector<CharacterKoopa*> enemies;
 	
@@ -78,16 +77,19 @@ private:
 	// Query if an injured/killed enemy is an Icicle enemy, in order to determine whether to spawn coins on enemy death.
 	void QueryIcicleInjury(CharacterKoopa* enemy);
 
-	// TODO: this should be removed as levels move towards using a manifest of enemies and not spawning them endlessly.
-	float koopa_spawn_frequency = 9.0f;
-	float last_koopa_spawn;
-	FACING koopa_starting_direction;
+	// How frequently each type of enemy will spawn.
+	Timer koopaSpawnTimer;
+	Timer crabSpawnTimer;
+	Timer icicleSpawnTimer;
+
 
 	// A window that can be displayed at the end of a game for the player to submit their name to the high score table.
 	ScoreNameEntryWindow scoreNameWindow;
 
 	// How long the game over sequence is displayed at the end of a game.
 	Timer gameOverTimer;
+
+	bool isTwoPlayer = false;
 };
 
 #endif

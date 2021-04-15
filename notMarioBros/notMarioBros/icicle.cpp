@@ -1,7 +1,7 @@
 #include "icicle.h"
 
 
-CharacterIcicle::CharacterIcicle(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing) : CharacterKoopa(renderer, start_position, map, start_facing)
+CharacterIcicle::CharacterIcicle(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time) : CharacterKoopa(renderer, start_position, map, start_facing, activation_time)
 {
 	// Only the standard roaming texture needs to be set for an Icicle, as they will die and be removed immediately upon being stunned/injured.
 	textureRoaming[0] = TEXTURE::ID::ICICLE;
@@ -14,10 +14,13 @@ CharacterIcicle::CharacterIcicle(SDL_Renderer* renderer, Vector2D start_position
 
 void CharacterIcicle::Update(float delta_time, SDL_Event e) {
 	CharacterKoopa::Update(delta_time,e);
-	// Die immediately upon exiting through a pipe and getting angry.
-	if (angry || GetInjured())
+	if (IsActivated())
 	{
-		SetAlive(false);
+		// Die immediately upon exiting through a pipe and getting angry.
+		if (angry || GetInjured())
+		{
+			SetAlive(false);
+		}
 	}
 }
 

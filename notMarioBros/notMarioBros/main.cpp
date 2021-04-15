@@ -144,18 +144,6 @@ bool Update() {
 	case SDL_QUIT:
 		return true;
 		break;
-	case SDL_KEYDOWN:
-		if (e.key.keysym.sym == SDLK_q) {
-			return true;
-		}
-		if (e.key.keysym.sym == SDLK_1) {
-			gameScreenManager->ChangeScreen(SCREENS::SCREEN_MENU);
-		}
-		if (e.key.keysym.sym == SDLK_2) { 
-			gameScreenManager->ChangeScreen(SCREENS::SCREEN_LEVEL1);
-		}
-		break;
-		// TODO: Implement button presses to start game from main menu.
 	}
 
 	// Dividing the amount of time between the first and last frame in ticks by 1000.0 gives us the deltaTime in milliseconds.

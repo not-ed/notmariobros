@@ -34,9 +34,6 @@ public:
 	void SetAlive(bool is_alive);
 	bool IsAlive() { return alive; }
 
-	//TODO: this should be remove later
-	void Debug_RenderHitbox();
-
 	// Is the character COMPLETELY inside the level bounds?
 	bool InLevelBounds();
 

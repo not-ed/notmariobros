@@ -51,8 +51,8 @@ void GameScreenTitle::Render() {
 		}
 	}
 	else { // Game start prompts
-		Text::Draw("1 Player Game [Z]", IntVector2D(120, 240), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
-		Text::Draw("2 Player Game [X]", IntVector2D(120, 304), FONT::ID::LUIGI, FONT::ALLIGNMENT::LEFT);
+		Text::Draw("1 Player Game [1]", IntVector2D(120, 240), FONT::ID::MARIO, FONT::ALLIGNMENT::LEFT);
+		Text::Draw("2 Player Game [2]", IntVector2D(120, 304), FONT::ID::LUIGI, FONT::ALLIGNMENT::LEFT);
 	}
 }
 

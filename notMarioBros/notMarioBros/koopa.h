@@ -18,7 +18,7 @@ enum ENEMY_TYPE {
 class CharacterKoopa : public Character
 {
 public:
-	CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing);
+	CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time);
 	void Render();
 	void Update(float delta_time, SDL_Event e);
 
@@ -33,6 +33,8 @@ public:
 
 	bool IsAngry() { return angry; }
 
+	bool IsActivated() { return activationTimer.IsExpired(); }
+
 protected:
 	// Relevant texture IDs for roaming, stunned and dead states, as well as dedicated sprites for when angry.
 	TEXTURE::ID textureRoaming[2] = { TEXTURE::ID::KOOPA,TEXTURE::ID::KOOPA_ANGRY };
@@ -43,8 +45,8 @@ protected:
 	float regularMovementSpeed = KOOPA_SPEED;
 	float angryMovementSpeed = KOOPA_ANGRY_SPEED;
 
-protected:
-
+	// Timer that dictates how long until an enemy "activates" and is rendered, updated and follows the games logic.
+	Timer activationTimer;
 	Timer injuryTimer;
 	bool injured;
 	void FlipRightWayUp();
