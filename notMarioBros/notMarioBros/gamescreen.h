@@ -10,6 +10,7 @@ class GameScreen
 {
 protected:
 	SDL_Renderer* renderer;
+
 	// A pointer to the score counter held in the game screen manager - This should NOT be deleted on screen destruction as it is shared!
 	ScoreCounter* scoreCounter;
 

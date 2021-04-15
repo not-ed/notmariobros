@@ -46,6 +46,7 @@ private:
 
 	CharacterMario* mario = nullptr;
 	CharacterLuigi* luigi = nullptr;
+	// An array that indexes the mario and luigi pointers for the sake of preventing duplication in some areas.
 	CharacterMario* players[2];
 
 	PowBlock* powBlock;
@@ -66,12 +67,12 @@ private:
 	// Any enemies that exist in the scene so far.
 	vector<CharacterKoopa*> enemies;
 	
-	void UpdateCoins(float delta_time, SDL_Event e);
 	// Any coins that exist in the level, which update and behave independently from enemies.
+	void UpdateCoins(float delta_time, SDL_Event e);
 	vector<Coin*> coins;
 
-	void UpdateFireBalls(float delta_time, SDL_Event e);
 	// Any fireballs that exist in the level, which update and behave independently from enemies.
+	void UpdateFireBalls(float delta_time, SDL_Event e);
 	vector<FireBall*> fireballs;
 
 	// Query if an injured/killed enemy is an Icicle enemy, in order to determine whether to spawn coins on enemy death.
@@ -82,13 +83,13 @@ private:
 	Timer crabSpawnTimer;
 	Timer icicleSpawnTimer;
 
-
 	// A window that can be displayed at the end of a game for the player to submit their name to the high score table.
 	ScoreNameEntryWindow scoreNameWindow;
 
 	// How long the game over sequence is displayed at the end of a game.
 	Timer gameOverTimer;
 
+	// Is the game being played 2 player?
 	bool isTwoPlayer = false;
 };
 

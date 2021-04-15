@@ -21,7 +21,6 @@ public:
 
 	void TakeHit();
 
-	// Are any hits left in the POW block?
 	bool IsAvailable() { return hitsLeft > 0; }
 
 private:

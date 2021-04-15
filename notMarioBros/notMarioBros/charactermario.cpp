@@ -28,7 +28,11 @@ void CharacterMario::Update(float delta_time, SDL_Event e) {
 				movingRight = true;
 			}
 			if (e.key.keysym.sym == jumpKey) {
-				if (canJump) { Jump(INITIAL_JUMP_FORCE); anim.SwitchTexture(jumpTexture); SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);}
+				if (canJump) { 
+					Jump(INITIAL_JUMP_FORCE); 
+					anim.SwitchTexture(jumpTexture); 
+					SoundManager::Instance()->PlaySound(SOUND::ID::PLAYER_JUMP);
+				}
 			}
 			break;
 		case SDL_KEYUP:
@@ -117,11 +121,6 @@ void CharacterMario::RenderGUI() {
 	hud_text.append(to_string(remainingLives));
 
 	Text::Draw(hud_text, hudTextPosition, hudFont, hudFontAllignment);
-
-	/*SDL_Rect boxt = SDL_Rect{ (int)position.x,(int)position.y - 2,(int)GetCollisionBox().width,4 };
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderDrawRect(renderer, &boxt);
-	SDL_SetRenderDrawColor(renderer,255,255,255,255);*/
 }
 
 void CharacterMario::ResetLives() {

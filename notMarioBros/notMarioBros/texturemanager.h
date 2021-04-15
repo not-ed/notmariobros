@@ -58,6 +58,7 @@ private:
 	static TextureManager* instance;
 
 	Texture2D* textures[TEXTURE::ID::count];
+
 	// How many frames are in a given Texture
 	int frameCount[TEXTURE::ID::count];
 

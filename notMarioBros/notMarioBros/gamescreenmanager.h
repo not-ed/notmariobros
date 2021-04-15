@@ -24,10 +24,10 @@ private:
 	SDL_Renderer* renderer;
 
 	GameScreen* currentScreen;
+	SCREENS currentScreenID = SCREENS::SCREEN_MENU;
 
 	ScoreCounter score;
 
-	SCREENS currentScreenID = SCREENS::SCREEN_MENU;
 };
 
 #endif

@@ -42,6 +42,7 @@ private:
 	int currentFrame = 0;
 	float animationSpeed = 0.0f;
 	
+	// How the displayed texture is flipped.
 	SDL_RendererFlip flipState = SDL_FLIP_NONE;
 
 	SDL_Rect renderPortion = SDL_Rect{0,0,1,1};

@@ -2,15 +2,14 @@
 
 // The required parameters also need to be passed through the GameScreens constructor.
 GameScreenLevel1::GameScreenLevel1(SDL_Renderer* game_renderer, ScoreCounter* score_counter, bool include_luigi) : GameScreen(game_renderer,score_counter) {
-	levelMap = nullptr;
+	
+	scoreNameWindow.SetRenderer(game_renderer);
 
 	isTwoPlayer = include_luigi;
 
-	scoreNameWindow.SetRenderer(game_renderer);
-
+	levelMap = nullptr;
 	SetUpLevel();
 }
-
 
 GameScreenLevel1::~GameScreenLevel1()
 {
@@ -46,11 +45,83 @@ GameScreenLevel1::~GameScreenLevel1()
 	fireballs.clear();
 }
 
+bool GameScreenLevel1::SetUpLevel() {
+	// Set up screen shake timer
+	screenShakeTimer.SetTime(SHAKE_DURATION, false);
+
+	// Load one-off background texture
+	backgroundTexture = new Texture2D(renderer);
+	if (!backgroundTexture->LoadFromFile("Images/lvl1background.png"))
+	{
+		std::cerr << "[!] Failed to load background texture." << std::endl;
+		return false;
+	}
+
+	// Establish level map data
+	SetLevelMap();
+
+	// Setting up player characters
+	mario = new CharacterMario(renderer, Vector2D(64, 330), levelMap);
+	players[0] = mario;
+	mario->ResetLives();
+	// Set up Luigi if the game is being played 2P
+	if (isTwoPlayer)
+	{
+		luigi = new CharacterLuigi(renderer, Vector2D(416, 330), levelMap);
+		players[1] = luigi;
+		luigi->ResetLives();
+	}
+
+	// Setting up POW block
+	powBlock = new PowBlock(renderer, levelMap);
+	backgroundYPos = 0.0f;
+
+	// Set initial times for dictating enemy spawns
+	koopaSpawnTimer.SetTime(2.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 2.0f), true);
+	crabSpawnTimer.SetTime(10.0f + fmod(rand(), CRAB_SPAWN_TIME_MAX - 10.0f), true);
+	icicleSpawnTimer.SetTime(20.0f + fmod(rand(), ICICLE_SPAWN_TIME_MAX - 20.0f), true);
+
+	// Set up how long the game over screen will be displayed at the end of the game.
+	gameOverTimer.SetTime(GAME_OVER_TIME, false);
+
+	// Start playing level music
+	SoundManager::Instance()->PlayMusic(MUSIC::ID::MARIO);
+
+	return true;
+}
+
+void GameScreenLevel1::SetLevelMap() {
+	// Establish tile/collision data.
+	int map[MAP_HEIGHT][MAP_WIDTH] = {
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+		{1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	};
+
+	// Clean up any old maps if they exist
+	if (levelMap != nullptr) {
+		delete levelMap;
+	}
+
+	//Set new map
+	levelMap = new LevelMap(map);
+}
+
 void GameScreenLevel1::Render() {
-	// Pointers to characters that are dead, so that they can be drawn last to appear at the end of the render loop.
+	// Pointers to characters that are dead, so that they can be drawn last at the end of the render loop in order to guarantee they are in front of everything.
 	std::vector<Character*> dead_characters;
 
-	// Render all enemies
+	// Render enemies
 	for (int i = 0; i < enemies.size(); i++)
 	{
 		if (enemies[i]->IsActivated())
@@ -71,8 +142,6 @@ void GameScreenLevel1::Render() {
 		coins[i]->Render();
 	}
 
-	
-
 	//Render mario/luigi
 	if (mario->IsAlive())
 	{
@@ -81,11 +150,8 @@ void GameScreenLevel1::Render() {
 	else {
 		dead_characters.push_back(mario);
 	}
-	
-	
-
-	// If game is being played 2P
-	if (luigi != nullptr)
+	// Is game being played 2P?
+	if (luigi != nullptr) 
 	{
 		if (luigi->IsAlive())
 		{
@@ -106,7 +172,7 @@ void GameScreenLevel1::Render() {
 		dead_characters[i]->Render();
 	}
 
-	// The pointers of dead characters are shared, they do not need to be deleted here.
+	// The pointers of dead characters are shared, they do not need to be deleted directly, and so the vector can just be cleared.
 	dead_characters.clear();
 
 	//Render fireballs
@@ -115,26 +181,23 @@ void GameScreenLevel1::Render() {
 		fireballs[i]->Render();
 	}
 
+	// Render any GUI elements from Mario and Luigi
 	mario->RenderGUI();
 	if (luigi != nullptr)
 	{
 		luigi->RenderGUI();
 	}
 
-	// Draw Score
+	// Draw Score counter
 	Text::Draw(to_string(scoreCounter->GetCurrentScore()), IntVector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT - 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 
-	// Draw remaining enemy counters
-	Text::Draw(to_string(enemies.size()), IntVector2D(32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
-	Text::Draw(to_string(enemies.size()), IntVector2D(SCREEN_WIDTH - 32, 24), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
-
-	// The game over sequence is being displayed
+	// Display game over sequence if needed
 	if (!gameOverTimer.IsExpired())
 	{
 		Text::Draw("GAME OVER", IntVector2D(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), FONT::ID::REGULAR, FONT::ALLIGNMENT::CENTER);
 	}
 
-	// Display the high score name entry window if it is being used.
+	// Display the high score name entry window if needed
 	if (scoreNameWindow.IsDisplayed())
 	{
 		scoreNameWindow.Render();
@@ -161,9 +224,10 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 				RequestScreenSwitch(SCREEN_MENU);
 			}
 		}
-		return; // Return early, if this or the high score screen is being shown, the game doesn't need to update, only be drawn.
+		return; // Return early, if this or the high score screen is being shown, the game doesn't need to update, only be drawn in whatever state it was in.
 	}
 
+	// High score entry window is being displayed, so game logic 
 	if (scoreNameWindow.IsDisplayed())
 	{
 		scoreNameWindow.Update(delta_time, e);
@@ -172,12 +236,13 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 		if (!scoreNameWindow.IsDisplayed())
 		{
 			HighScore::SubmitScoreEntry(scoreNameWindow.GetEnteredName().c_str(), scoreCounter->GetCurrentScore());
+
 			RequestScreenSwitch(SCREEN_MENU);
 		}
-		return; // Return early, if this or the game over screen is being shown, the game doesn't need to update, only be drawn.
+		return; // Return early, if this or the game over screen is being shown, the game doesn't need to update, only be drawn in whatever state it was in.
 	}
 	
-	// Neither screen is being shown. We can continue with the update loop as normal
+	// If neither screen is being shown. We can continue with the update loop as normal
 
 	// Screen shake (if applicable)
 	screenShakeTimer.Update(delta_time);
@@ -193,6 +258,7 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 	//Update mario/luigi
 	mario->Update(delta_time, e);
 	QueryLevelBounds(mario);
+
 	if (luigi != nullptr) {
 		luigi->Update(delta_time, e);
 		QueryLevelBounds(luigi);
@@ -214,77 +280,6 @@ void GameScreenLevel1::Update(float delta_time, SDL_Event e) {
 			gameOverTimer.Reset();
 		}
 	}
-}
-
-bool GameScreenLevel1::SetUpLevel() {
-	// Set up screen shake timer
-	screenShakeTimer.SetTime(SHAKE_DURATION, false);
-
-	// Load background texture
-	backgroundTexture = new Texture2D(renderer);
-	if (!backgroundTexture->LoadFromFile("Images/lvl1background.png"))
-	{
-		std::cerr << "[!] Failed to load background texture." << std::endl;
-		return false;
-	}
-
-	// Establish level map data
-	SetLevelMap();
-
-	// Setting up player characters
-	mario = new CharacterMario(renderer, Vector2D(64, 330), levelMap);
-	players[0] = mario;
-	// As this is the first level of any run, lives can be reset here.
-	mario->ResetLives();
-
-	//if luigi
-	if (isTwoPlayer)
-	{
-		luigi = new CharacterLuigi(renderer, Vector2D(416, 330), levelMap);
-		players[1] = luigi;
-		luigi->ResetLives();
-	}
-
-	// Setting up POW block
-	powBlock = new PowBlock(renderer, levelMap);
-	//screenshakeIsActive = false;
-	backgroundYPos = 0.0f;
-
-	koopaSpawnTimer.SetTime(2.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 2.0f), true);
-	crabSpawnTimer.SetTime(10.0f + fmod(rand(), CRAB_SPAWN_TIME_MAX - 10.0f), true);
-	icicleSpawnTimer.SetTime(20.0f + fmod(rand(), ICICLE_SPAWN_TIME_MAX - 20.0f), true);
-	gameOverTimer.SetTime(GAME_OVER_TIME, false);
-
-	SoundManager::Instance()->PlayMusic(MUSIC::ID::MARIO);
-
-	return true;
-}
-
-void GameScreenLevel1::SetLevelMap() {
-	// Establish tile/collision data.
-	int map[MAP_HEIGHT][MAP_WIDTH] = {
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-		{1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-		{1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	};
-
-	//Clear any old maps
-	if (levelMap != nullptr) {
-		delete levelMap;
-	}
-
-	//Set new map
-	levelMap = new LevelMap(map);
 }
 
 void GameScreenLevel1::DoScreenShake() {
@@ -386,7 +381,7 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 		icicleSpawnTimer.SetTime(20.0f + fmod(rand(), KOOPA_SPAWN_TIME_MAX - 20.0f), true);
 	}
 
-	// If there is no enemies to start with, none of this needs to be done
+	// If there is no enemies actually in the level, no updating needs to be done.
 	if (!enemies.empty()) {
 		
 		// Keep track of the next index (if any) of any enemies that need to be deleted after the loop
@@ -397,10 +392,10 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 			// Check if going off screen, and wrap accordingly if needed.
 			QueryLevelBounds(enemies[i]);
 
-			// Enemies that are not activated can still be updated, otherwise their activation timer will never count down
+			// Enemies that are not activated still need to be updated, otherwise their activation timer will never count down
 			enemies[i]->Update(delta_time, e);
 
-			// If the enemy is a crab, request any held fireballs if they have them.
+			// If the enemy is a crab, request any held fireball pointers if they have them.
 			if (enemies[i]->GetEnemyType() == ENEMY_TYPE::CRAB)
 			{
 				CharacterCrab* crab = (CharacterCrab*)enemies[i];
@@ -438,12 +433,14 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 									scoreCounter->Add(SCORE_ENEMY_STUNNED, 1 + enemies[i]->IsAngry());
 								}
 							}
-							/*else*/ if (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) { // Player has collided with an enemy while on the ground
+
+							// Player has collided with an enemy
+							if (Collisions::Instance()->Box(enemies[i]->GetCollisionBox(), players[j]->GetCollisionBox())) {
 								// If the enemy is stunned/injured and still alive, kill it
 								if (enemies[i]->GetInjured()) {
 
 									if (enemies[i]->IsAlive()) {
-										//Kill the enemy
+
 										enemies[i]->SetAlive(false);
 
 										// Award score based on the type of enemy killed, and double it if they were angry
@@ -460,7 +457,8 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 										}
 									}
 								}
-								else { // The enemy is not stunned
+								else { // The enemy is not stunned, meaning the player should be killed.
+
 									// If the player is not invincible, kill them.
 									if (!players[j]->Invincible()) {
 
@@ -489,7 +487,6 @@ void GameScreenLevel1::UpdateEnemies(float delta_time, SDL_Event e) {
 			enemies.erase(enemies.begin() + enemyIndexToDelete);
 		}
 	}
-
 }
 
 void GameScreenLevel1::UpdateCoins(float delta_time, SDL_Event e) {
@@ -497,7 +494,8 @@ void GameScreenLevel1::UpdateCoins(float delta_time, SDL_Event e) {
 	{
 		coins[i]->Update(delta_time, e);
 
-		if (coins[i]->Expired()) // Coin hasn't been picked up in time and needs to vanish
+		// Coin hasn't been picked up in time and needs to vanish
+		if (coins[i]->Expired()) 
 		{
 			delete coins[i];
 			coins.erase(coins.begin() + i);
@@ -562,11 +560,11 @@ void GameScreenLevel1::CreateIcicle(Vector2D position, FACING direction, float a
 }
 
 void GameScreenLevel1::QueryLevelBounds(Character* chara) {
-	// Get a temporary copy of the characters position and their hitbox
+	// Get a temporary copy of the character's position and their hitbox for reference/modification
 	Vector2D char_pos = chara->GetPosition();
 	Rect2D char_col = chara->GetCollisionBox();
 
-	// Set up a flag if the player has had to be flipped around to the other side of the screen on the x-axis
+	// Set up a flag for if the player has had to be flipped around to the other side of the screen on the x-axis
 	bool flipped = false;
 
 	if ((char_pos.x) > SCREEN_WIDTH) //off bounds on the right side

@@ -7,7 +7,7 @@
 #include "commons.h"
 #include "timer.h"
 
-// An identifier of the explicit enemy type, as this detail can be lost in derived classes from CharacterKoopa
+// An identifier of the explicit enemy type, as this detail can be lost in derived classes if casting to the base CharacterKoopa class
 enum ENEMY_TYPE {
 	KOOPA,
 	CRAB,
@@ -19,6 +19,7 @@ class CharacterKoopa : public Character
 {
 public:
 	CharacterKoopa(SDL_Renderer* renderer, Vector2D start_position, LevelMap* map, FACING start_facing, float activation_time);
+
 	void Render();
 	void Update(float delta_time, SDL_Event e);
 
@@ -47,6 +48,7 @@ protected:
 
 	// Timer that dictates how long until an enemy "activates" and is rendered, updated and follows the games logic.
 	Timer activationTimer;
+
 	Timer injuryTimer;
 	bool injured;
 	void FlipRightWayUp();
@@ -59,6 +61,5 @@ protected:
 	// Explicit identifier of an enemies type when its potentially derived nature is not known.
 	ENEMY_TYPE type = ENEMY_TYPE::KOOPA;
 };
-
 
 #endif

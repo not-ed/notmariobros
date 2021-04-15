@@ -39,8 +39,7 @@ public:
 
 	// Trigger a special flag upon looping around a level axis via a pipe
 	void TriggerPipeFlag() { pipeTravelFlag = true; }
-private:
-	bool alive;
+
 protected:
 	// The character has been through a pipe at least once.
 	bool pipeTravelFlag = false;
@@ -48,6 +47,7 @@ protected:
 	FACING facingDirection;
 
 	SDL_Renderer* renderer;
+
 	Vector2D position;
 
 	float collisionRadius;
@@ -64,6 +64,7 @@ protected:
 	virtual void Jump(float force);
 	virtual void AddGravity(float delta_time);
 
+	bool alive;
 	// Triggered when the character is "killed" by setting alive to false
 	virtual void OnKill();
 

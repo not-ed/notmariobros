@@ -92,7 +92,6 @@ private:
 	void Close() { displayed = false; }
 };
 
-
 namespace HighScore {
 
 	// Potentially destructive functions, such as erasing file data are held in an Anonymous namespace.

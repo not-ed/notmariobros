@@ -11,9 +11,6 @@ public:
 
 	void Update(float delta_time, SDL_Event e);
 	void Render();
-
-private:
-
 };
 
 
